@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Host {
+  id           String        @id @default(uuid())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  name         String
+  Quizzes      Quiz[]
+  QuizSessions QuizSession[]
+}
+
+model Quiz {
+  id           String        @id @default(uuid())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  host         Host          @relation(fields: [hostId], references: [id])
+  hostId       String
+  name         String
+  description  String?
+  Questions    Question[]
+  QuizSessions QuizSession[]
+}
+
+model Question {
+  id            String   @id @default(uuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  quiz          Quiz     @relation(fields: [quizId], references: [id])
+  quizId        String
+  // string value of QuestionType
+  type          String
+  // Multiple answers are separated by a double pipe ||
+  answerOptions String?
+  position      Int
+  points        Int
+  Answer        Answer[]
+}
+
+model QuizSession {
+  id              String   @id @default(uuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  quiz            Quiz     @relation(fields: [quizId], references: [id])
+  quizId          String
+  host            Host     @relation(fields: [hostId], references: [id])
+  hostId          String
+  currentPosition Int      @default(0)
+  Answers         Answer[]
+  Teams           Team[]
+}
+
+model Team {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  quizSession   QuizSession @relation(fields: [quizSessionId], references: [id])
+  quizSessionId String
+
+  name String
+
+  // nice to have
+  // Team members are separated by a double pipe ||
+  members      String
+  Answers      Answer[]
+  AwaredPoints AwaredPoints[]
+}
+
+model Answer {
+  id            String         @id @default(uuid())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  quizSession   QuizSession    @relation(fields: [quizSessionId], references: [id])
+  quizSessionId String
+  question      Question       @relation(fields: [questionId], references: [id])
+  questionId    String
+  team          Team           @relation(fields: [teamId], references: [id])
+  teamId        String
+  answer        String
+  AwaredPoints  AwaredPoints[]
+}
+
+model AwaredPoints {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  answer    Answer   @relation(fields: [answerId], references: [id])
+  answerId  String
+  team      Team     @relation(fields: [teamId], references: [id])
+  teamId    String
+  points    Int
+}

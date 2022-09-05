@@ -29,6 +29,7 @@ export interface Question extends DatabaseEntry {
   quizId: string;
   type: QuestionType;
   position: number;
+  points: number;
 }
 
 export interface MultipleChoiceQuestion extends Question {
@@ -54,6 +55,7 @@ export interface FreeFormQuestion extends Question {
 
 export interface QuizSession extends DatabaseEntry {
   quizzId: string;
+  hostId: string;
   currentPosition: number;
 }
 
@@ -69,4 +71,9 @@ export interface Answer extends DatabaseEntry {
   questionId: string;
   teamId: string;
   answer: string | number | boolean;
+}
+
+export interface AwardedPoints extends DatabaseEntry {
+  answerId: string;
+  points: number;
 }
