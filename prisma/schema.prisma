@@ -36,6 +36,7 @@ model Question {
   quizId        String
   // string value of QuestionType
   type          String
+  questionText  String
   // Multiple answers are separated by a double pipe ||
   answerOptions String?
   position      Int

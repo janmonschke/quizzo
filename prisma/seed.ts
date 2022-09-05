@@ -28,6 +28,8 @@ async function seed() {
       type: QuestionType.freeForm,
       position: 0,
       quizId: quiz.id,
+      questionText:
+        "What year did the German football team win the world championship for the first time?",
     },
   });
   console.log(question);

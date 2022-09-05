@@ -1,17 +1,4 @@
-export type DatabaseEntry = {
-  id: string;
-  createdAt: number;
-  changedAt: number;
-};
-
-export interface Host extends DatabaseEntry {
-  name: string;
-}
-
-export interface Quiz extends DatabaseEntry {
-  name: string;
-  description: string;
-}
+import type { Host, Question, Quiz } from "@prisma/client";
 
 export enum QuestionType {
   multipleChoice = "multipleChoice",
@@ -25,55 +12,10 @@ export enum QuestionType {
   picture = "picture",
 }
 
-export interface Question extends DatabaseEntry {
-  quizId: string;
-  type: QuestionType;
-  position: number;
-  points: number;
-}
+export type QuizWithQuestions = Quiz & {
+  Questions: Question[];
+};
 
-export interface MultipleChoiceQuestion extends Question {
-  type: QuestionType.multipleChoice;
-  answerOptions: string[];
-  answer: number;
-}
-
-export interface GuesstimationQuestion extends Question {
-  type: QuestionType.guesstimation;
-  answer: number;
-}
-
-export interface YesOrNoQuestion extends Question {
-  type: QuestionType.yesOrNo;
-  answer: boolean;
-}
-
-export interface FreeFormQuestion extends Question {
-  type: QuestionType.freeForm;
-  answer: string;
-}
-
-export interface QuizSession extends DatabaseEntry {
-  quizzId: string;
-  hostId: string;
-  currentPosition: number;
-}
-
-export interface Team extends DatabaseEntry {
-  name: string;
-
-  // nice to have
-  members: string[];
-}
-
-export interface Answer extends DatabaseEntry {
-  quizSessionId: string;
-  questionId: string;
-  teamId: string;
-  answer: string | number | boolean;
-}
-
-export interface AwardedPoints extends DatabaseEntry {
-  answerId: string;
-  points: number;
-}
+export type HostWithQuizzes = Host & {
+  Quizzes: QuizWithQuestions[];
+};

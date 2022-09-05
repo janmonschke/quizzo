@@ -1,13 +1,8 @@
 import type { LinksFunction, LoaderFunction } from "@remix-run/node";
-import type { Host, Quiz } from "@prisma/client";
 import { json } from "@remix-run/node";
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
-
+import type { HostWithQuizzes } from "~/types";
 import { db } from "~/db.server";
-
-type HostWithQuizzes = Host & {
-  Quizzes: Quiz[];
-};
 
 type LoaderData = {
   host: HostWithQuizzes | null;
@@ -17,7 +12,11 @@ export const loader: LoaderFunction = async () => {
   const data: LoaderData = {
     host: await db.host.findFirst({
       include: {
-        Quizzes: true,
+        Quizzes: {
+          include: {
+            Questions: true,
+          },
+        },
       },
     }),
   };
@@ -33,7 +32,15 @@ export default function Index() {
 
       {host && host.name}
 
-      {host && <pre>{JSON.stringify(host.Quizzes, null, 2)}</pre>}
+      {host?.Quizzes && (
+        <ul>
+          {host.Quizzes.map((quiz) => (
+            <li key={quiz.id}>
+              <Link to={`/quiz/${quiz.id}`}>{quiz.name}</Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
