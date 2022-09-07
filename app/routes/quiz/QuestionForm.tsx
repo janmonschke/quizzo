@@ -1,12 +1,13 @@
 import { useFetcher } from "@remix-run/react";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { QuestionType } from "~/types";
 
 export default function QuestionForm() {
   const fetcher = useFetcher();
   const hasSubmission = !!fetcher.submission;
   const [questionType, setQuestionType] = useState(QuestionType.freeForm);
-  const [questionOptions, setQuestionOptions] = useState<string[]>([]);
+  const [answerOptions, setAnswerOptions] = useState<string[]>([]);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const changeQuestionType = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -15,27 +16,46 @@ export default function QuestionForm() {
     []
   );
 
-  const addQuestion = useCallback(
+  const addAnswerOption = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key === "Enter") {
         const newOption = event.currentTarget.value;
-        setQuestionOptions((options) => [...options, newOption]);
+        event.currentTarget.value = "";
+        setAnswerOptions((options) => [...options, newOption]);
         event.preventDefault();
       }
     },
     []
   );
 
+  const removeAnswerOption = useCallback((option: string) => {
+    setAnswerOptions((_answerOptions) =>
+      _answerOptions.filter((_option) => _option !== option)
+    );
+  }, []);
+
+  useEffect(() => {
+    if (hasSubmission) {
+      formRef.current?.reset();
+    }
+  }, [hasSubmission]);
+
   return (
     <fetcher.Form
       method="post"
       style={{ opacity: hasSubmission ? 0.25 : 1 }}
       replace
+      ref={formRef}
     >
-      <select value={questionType} onChange={changeQuestionType}>
-        <option value={QuestionType.freeForm}>Free form (anything goes)</option>
-        <option value={QuestionType.multipleChoice}>Multiple Choice</option>
-      </select>
+      <label>
+        Question type:{" "}
+        <select value={questionType} onChange={changeQuestionType}>
+          <option value={QuestionType.freeForm}>
+            Free form (anything goes)
+          </option>
+          <option value={QuestionType.multipleChoice}>Multiple Choice</option>
+        </select>
+      </label>
       <div>
         <label>
           Question: <input type="text" name="questionText" />
@@ -48,10 +68,23 @@ export default function QuestionForm() {
       </div>
       {questionType === QuestionType.multipleChoice && (
         <div>
-          {questionOptions.map((option) => (
-            <input type="text" value={option} key={option} />
-          ))}
-          <input type="text" key="EMPTYONE" onKeyDown={addQuestion} />
+          <label>
+            Answer options:{" "}
+            {answerOptions.map((option) => (
+              <div key={option}>
+                <input type="text" value={option} />
+                <button onClick={() => removeAnswerOption(option)}>X</button>
+              </div>
+            ))}
+            <div>
+              <input
+                type="text"
+                key="EMPTYONE"
+                onKeyDown={addAnswerOption}
+                placeholder="Add a new answer option"
+              />
+            </div>
+          </label>
         </div>
       )}
       <div>
@@ -59,6 +92,13 @@ export default function QuestionForm() {
           Points: <input type="numer" name="points" defaultValue={1} />
         </label>
       </div>
+      {answerOptions.length ? (
+        <input
+          type="hidden"
+          name="answerOptions"
+          value={answerOptions.join("||")}
+        />
+      ) : null}
       <div>
         <button type="submit" className="button" disabled={hasSubmission}>
           Add

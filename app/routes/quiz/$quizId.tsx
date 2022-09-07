@@ -32,13 +32,14 @@ export const action: ActionFunction = async ({ request, params }) => {
   const answer = body.get("answer");
   const points = body.get("points");
   // TODO: add answeroptions
-  const answerOptions = body.get("answerOptions");
+  const answerOptions = body.get("answerOptions") || "";
 
   if (
     !quizId ||
     typeof questionText !== "string" ||
     typeof answer !== "string" ||
-    typeof points !== "string"
+    typeof points !== "string" ||
+    typeof answerOptions !== "string"
   ) {
     throw new Error(
       `Not all required fields were passed. ${JSON.stringify(
@@ -57,6 +58,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const question = await db.question.create({
     data: {
       answer,
+      answerOptions,
       points: parseInt(points),
       questionText,
       type: QuestionType.freeForm,
