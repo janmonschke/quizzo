@@ -39,6 +39,8 @@ model Question {
   questionText  String
   // Multiple answers are separated by a double pipe ||
   answerOptions String?
+  // The actual answer
+  answer        String
   position      Int
   points        Int
   Answer        Answer[]
