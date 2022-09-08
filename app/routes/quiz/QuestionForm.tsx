@@ -37,6 +37,7 @@ export default function QuestionForm() {
   useEffect(() => {
     if (hasSubmission) {
       formRef.current?.reset();
+      setAnswerOptions([]);
     }
   }, [hasSubmission]);
 
