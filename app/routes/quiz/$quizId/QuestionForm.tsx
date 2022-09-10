@@ -1,8 +1,13 @@
 import { useFetcher } from "@remix-run/react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { QuestionType } from "~/types";
+import type { MinimalQuestion } from "./Question";
 
-export default function QuestionForm() {
+export default function QuestionForm({
+  questions,
+}: {
+  questions: MinimalQuestion[];
+}) {
   const fetcher = useFetcher();
   const hasSubmission = !!fetcher.submission;
   const [questionType, setQuestionType] = useState(QuestionType.freeForm);
@@ -41,6 +46,9 @@ export default function QuestionForm() {
     }
   }, [hasSubmission]);
 
+  const lastItem = questions[questions.length - 1];
+  const position = lastItem ? lastItem.position + 1 : 1000;
+
   return (
     <fetcher.Form
       method="post"
@@ -50,7 +58,7 @@ export default function QuestionForm() {
     >
       <label>
         Question type:{" "}
-        <select value={questionType} onChange={changeQuestionType}>
+        <select value={questionType} name="type" onChange={changeQuestionType}>
           <option value={QuestionType.freeForm}>
             Free form (anything goes)
           </option>
@@ -73,7 +81,7 @@ export default function QuestionForm() {
             Answer options:{" "}
             {answerOptions.map((option) => (
               <div key={option}>
-                <input type="text" value={option} />
+                <input type="text" value={option} readOnly />
                 <button onClick={() => removeAnswerOption(option)}>X</button>
               </div>
             ))}
@@ -100,6 +108,7 @@ export default function QuestionForm() {
           value={answerOptions.join("||")}
         />
       ) : null}
+      <input type="hidden" name="position" value={position} />
       <div>
         <button type="submit" className="button" disabled={hasSubmission}>
           Add

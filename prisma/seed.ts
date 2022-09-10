@@ -38,7 +38,7 @@ async function seed() {
       data: {
         points: 5,
         type: QuestionType.multipleChoice,
-        position: 0,
+        position: 1,
         quizId: quiz.id,
         questionText: "When did Elastic go public?",
         answer: "2018",

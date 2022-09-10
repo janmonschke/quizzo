@@ -41,7 +41,7 @@ model Question {
   answerOptions String?
   // The actual answer
   answer        String
-  position      Int
+  position      Float
   points        Int
   Answer        Answer[]
 }

@@ -4,8 +4,8 @@ import { useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { QuestionType } from "~/types";
 import { db } from "~/db.server";
-import QuestionForm from "../QuestionForm";
-import QuestionComponent from "./Question";
+import QuestionForm from "./QuestionForm";
+import QuestionList from "./QuestionList";
 
 type LoaderData = {
   questions: Question[] | null;
@@ -17,6 +17,9 @@ export const loader: LoaderFunction = async ({ params }) => {
     questions: await db.question.findMany({
       where: {
         quizId,
+      },
+      orderBy: {
+        position: "asc",
       },
     }),
   };
@@ -41,15 +44,18 @@ export const action: ActionFunction = async ({ request, params }) => {
     const questionText = body.get("questionText");
     const answer = body.get("answer");
     const points = body.get("points");
-    // TODO: add answeroptions
     const answerOptions = body.get("answerOptions") || "";
+    const position = body.get("position");
+    const type = body.get("type");
 
     if (
       !quizId ||
       typeof questionText !== "string" ||
       typeof answer !== "string" ||
       typeof points !== "string" ||
-      typeof answerOptions !== "string"
+      typeof answerOptions !== "string" ||
+      typeof type !== "string" ||
+      typeof position !== "string"
     ) {
       throw new Error(
         `Not all required fields were passed. ${JSON.stringify(
@@ -71,8 +77,8 @@ export const action: ActionFunction = async ({ request, params }) => {
         answerOptions,
         points: parseInt(points),
         questionText,
-        type: QuestionType.freeForm,
-        position: 1,
+        type,
+        position: parseFloat(position),
         quizId,
       },
     });
@@ -84,19 +90,15 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function Questions() {
   const { questions } = useLoaderData<LoaderData>();
 
+  if (!questions || questions.length === 0) {
+    return <span>No questions yet</span>;
+  }
+
   return (
     <div>
-      <ol>
-        {questions?.map((question) => (
-          <li key={question.id}>
-            <QuestionComponent {...question} />
-          </li>
-        ))}
-      </ol>
-      <div>
-        <h2>Add a new question</h2>
-        <QuestionForm />
-      </div>
+      <QuestionList questions={questions} />
+      <h2>Add a new question</h2>
+      <QuestionForm questions={questions} />
     </div>
   );
 }
