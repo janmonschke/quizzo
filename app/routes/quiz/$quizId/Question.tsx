@@ -1,5 +1,6 @@
 import type { Question } from "@prisma/client";
 import { Form } from "@remix-run/react";
+import { parserAnswerOptions } from "~/helpers/answer_options";
 
 // This one is required because the serialized version of Question
 // does not 100% match the non-serialized version coming from the types.
@@ -23,7 +24,7 @@ export default function QuestionComponent({
       </div>
       {answerOptions && (
         <ol>
-          {answerOptions.split("||").map((option) => (
+          {parserAnswerOptions(answerOptions).map((option) => (
             <li key={option}>{option}</li>
           ))}
         </ol>

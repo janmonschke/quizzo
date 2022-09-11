@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { serializeAnswerOptions } from "~/helpers/answer_options";
 import { QuestionType } from "../app/types";
 const db = new PrismaClient();
 
@@ -43,7 +44,7 @@ async function seed() {
         quizId: quiz.id,
         questionText: "When did Elastic go public?",
         answer: "2018",
-        answerOptions: "2016||2017||2018||2019",
+        answerOptions: serializeAnswerOptions(["2016", "2017", "2018", "2019"]),
       },
     }),
   ]);
