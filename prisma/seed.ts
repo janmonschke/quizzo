@@ -7,6 +7,7 @@ async function seed() {
   // Create the host
   const host = await db.host.create({
     data: {
+      id: "1",
       name: "The Quiz Host",
     },
   });

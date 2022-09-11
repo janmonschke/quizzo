@@ -2,7 +2,6 @@ import type { Question } from "@prisma/client";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/node";
-import { QuestionType } from "~/types";
 import { db } from "~/db.server";
 import QuestionForm from "./QuestionForm";
 import QuestionList from "./QuestionList";
@@ -90,8 +89,8 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function Questions() {
   const { questions } = useLoaderData<LoaderData>();
 
-  if (!questions || questions.length === 0) {
-    return <span>No questions yet</span>;
+  if (!questions) {
+    return <>Something went wrong</>;
   }
 
   return (

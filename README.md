@@ -9,3 +9,5 @@
 `npx prisma db push` - create the database and the schema
 
 `npx prisma db seed` - seed database
+
+`npm run purge_db` - delete all data, recreated the db and seed it
