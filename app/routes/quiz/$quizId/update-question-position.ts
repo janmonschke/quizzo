@@ -10,11 +10,6 @@ export const action: ActionFunction = async ({ request, params }) => {
     return new Error("Not a valid request");
   }
 
-  console.log("in update pos", {
-    questionId,
-    newPosition: parseFloat(newPosition),
-  });
-
   await db.question.update({
     where: {
       id: questionId,

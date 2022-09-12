@@ -1,1 +1,1 @@
-export const ANSWER_OPTION_SPLITTER = "||";
+export const STRING_ARRAY_SPLITTER = "||";

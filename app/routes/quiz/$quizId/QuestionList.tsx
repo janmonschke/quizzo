@@ -3,8 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 import type { IProps as MovableProps } from "react-movable";
 import { List, arrayMove } from "react-movable";
 import { getNewPosition } from "~/helpers/get_new_position";
-import type { MinimalQuestion } from "./Question";
-import QuestionComponent from "./Question";
+import type { MinimalQuestion } from "../../../components/Question";
+import QuestionComponent from "../../../components/Question";
 
 export default function QuestionList({
   questions,

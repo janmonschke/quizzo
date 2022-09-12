@@ -1,8 +1,8 @@
 import { useFetcher } from "@remix-run/react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { serializeAnswerOptions } from "~/helpers/answer_options";
+import { serializeArrayString } from "~/helpers/string_arrays";
 import { QuestionType } from "~/types";
-import type { MinimalQuestion } from "./Question";
+import type { MinimalQuestion } from "../../../components/Question";
 
 export default function QuestionForm({
   questions,
@@ -106,7 +106,7 @@ export default function QuestionForm({
         <input
           type="hidden"
           name="answerOptions"
-          value={serializeAnswerOptions(answerOptions)}
+          value={serializeArrayString(answerOptions)}
         />
       ) : null}
       <input type="hidden" name="position" value={position} />
