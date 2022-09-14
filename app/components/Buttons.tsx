@@ -1,11 +1,25 @@
 import React from "react";
+import cx from "classnames";
 
-export const Button: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = (
-  props
-) => (
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  size?: "sm" | "md";
+};
+
+export const Button: React.FC<ButtonProps> = ({ size = "md", ...props }) => (
   <button
     {...props}
-    className="rounded-md px-4 py-2 font-semibold text-sm bg-cyan-500 text-white shadow-sm hover:bg-cyan-400 disabled:bg-slate-300"
+    className={cx(
+      "rounded-md",
+      size === "sm" ? "px-2" : "px-4",
+      size === "sm" ? "py-1" : "py-2",
+      "font-semibold",
+      "text-sm",
+      "bg-cyan-500",
+      "text-white",
+      "shadow-sm",
+      "hover:bg-cyan-400",
+      "disabled:bg-slate-300"
+    )}
   >
     {props.children}
   </button>

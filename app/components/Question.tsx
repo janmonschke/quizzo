@@ -15,19 +15,23 @@ export default function QuestionComponent({
   points,
 }: MinimalQuestion) {
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       <div>
-        {questionText} ({points}p)
+        <span className="text-lg">{questionText}</span>
       </div>
+      <div>Points: {points}</div>
       <div>
-        <strong>{answer}</strong>
+        Answer: <strong>{answer}</strong>
       </div>
       {answerOptions && (
-        <ol>
-          {parseArrayString(answerOptions).map((option) => (
-            <li key={option}>{option}</li>
-          ))}
-        </ol>
+        <>
+          Options:
+          <ol className="list-decimal ml-8">
+            {parseArrayString(answerOptions).map((option) => (
+              <li key={option}>{option}</li>
+            ))}
+          </ol>
+        </>
       )}
     </div>
   );

@@ -7,6 +7,7 @@ import { Button } from "~/components/Buttons";
 import { getNewPosition } from "~/helpers/get_new_position";
 import type { MinimalQuestion } from "../../../components/Question";
 import QuestionComponent from "../../../components/Question";
+import { Card } from "~/components/Card";
 
 export default function QuestionList({
   questions,
@@ -57,16 +58,26 @@ export default function QuestionList({
         {...props}
         className={cx(
           "py-2",
-          "list-disc",
-          isDragged ? "bg-slate-100 p-2 opacity-90 cursor-move" : ""
+          "cursor-move",
+          !isDragged && "list-decimal",
+          isDragged && "bg-white opacity-90 list-none",
+          "group"
         )}
       >
-        <QuestionComponent {...value} />
-        <Form method="post" replace>
-          <input type="hidden" name="questionId" value={value.id} />
-          <input type="hidden" name="_method" value="delete" />
-          <Button type="submit">Delete</Button>
-        </Form>
+        <Card>
+          <QuestionComponent {...value} />
+          <Form
+            method="post"
+            replace
+            className="opacity-0 group-hover:opacity-100 transition-opacity duration-75 absolute right-2 bottom-4 cursor-default"
+          >
+            <input type="hidden" name="questionId" value={value.id} />
+            <input type="hidden" name="_method" value="delete" />
+            <Button type="submit" size="sm">
+              Delete
+            </Button>
+          </Form>
+        </Card>
       </li>
     ),
     []
