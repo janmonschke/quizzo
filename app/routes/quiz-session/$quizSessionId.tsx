@@ -12,14 +12,18 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import QuestionComponent from "~/components/Question";
 import { db } from "~/db.server";
+import PrevNextButton from "./PrevNextButton";
+import TeamAnswer from "./TeamAnswer";
 import Teams from "./Teams";
 
-type LoadedTeam = Team & { AwardedPoints: AwardedPoints[] };
+type TeamWithPoints = Team & { AwardedPoints: AwardedPoints[] };
 
 type LoaderData = {
   quizSession: QuizSession & { Answers: Answer[] } & {
-    Teams: LoadedTeam[];
-  } & { host: Host } & { quiz: Quiz & { Questions: Question[] } };
+    Teams: TeamWithPoints[];
+  } & { host: Host } & {
+    quiz: Quiz & { Questions: Question[] };
+  };
 };
 
 export const loader: LoaderFunction = async ({ params }) => {
@@ -45,7 +49,6 @@ export const loader: LoaderFunction = async ({ params }) => {
       },
     },
   });
-  console.log(quizSession);
 
   return json({ quizSession });
 };
@@ -58,9 +61,36 @@ export default function QuizSessionComponent() {
   return (
     <div>
       <h1>{quizSession.quiz.name}</h1>
-      <QuestionComponent {...question} />
       <Teams teams={quizSession.Teams} />
-      <pre>{JSON.stringify(quizSession, null, 2)}</pre>
+      <QuestionComponent {...question} />
+      <PrevNextButton
+        questions={quizSession.quiz.Questions}
+        direction={-1}
+        quizSession={quizSession}
+      />
+      <PrevNextButton
+        questions={quizSession.quiz.Questions}
+        direction={1}
+        quizSession={quizSession}
+      />
+      {quizSession.Teams.map((team) => {
+        const answer = quizSession.Answers.find(
+          (answer) =>
+            answer.teamId === team.id && answer.questionId == question.id
+        );
+        const awardedPoints =
+          answer &&
+          team.AwardedPoints.find((awp) => answer.id === awp.answerId);
+        return (
+          <TeamAnswer
+            key={team.id}
+            answer={answer}
+            awardedPoints={awardedPoints}
+            team={team}
+            question={question}
+          />
+        );
+      })}
     </div>
   );
 }

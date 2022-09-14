@@ -31,7 +31,7 @@ export default function Index() {
 
       {host?.Quizzes && (
         <>
-          <h2>Quizezs</h2>
+          <h2>Quizzes</h2>
           <ul>
             {host.Quizzes.map((quiz) => (
               <li key={quiz.id}>
