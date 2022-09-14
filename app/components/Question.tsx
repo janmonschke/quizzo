@@ -5,7 +5,7 @@ import { parseArrayString } from "~/helpers/string_arrays";
 // does not 100% match the non-serialized version coming from the types.
 export type MinimalQuestion = Pick<
   Question,
-  "questionText" | "answer" | "answerOptions" | "points" | "position"
+  "id" | "questionText" | "answer" | "answerOptions" | "points" | "position"
 >;
 
 export default function QuestionComponent({

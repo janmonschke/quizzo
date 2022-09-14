@@ -12,11 +12,8 @@ export const loader: LoaderFunction = async () => {
   const data: LoaderData = {
     host: await db.host.findFirst({
       include: {
-        Quizzes: {
-          include: {
-            Questions: true,
-          },
-        },
+        Quizzes: true,
+        QuizSessions: true,
       },
     }),
   };
@@ -33,13 +30,29 @@ export default function Index() {
       {host && host.name}
 
       {host?.Quizzes && (
-        <ul>
-          {host.Quizzes.map((quiz) => (
-            <li key={quiz.id}>
-              <Link to={`/quiz/${quiz.id}`}>{quiz.name}</Link>
-            </li>
-          ))}
-        </ul>
+        <>
+          <h2>Quizezs</h2>
+          <ul>
+            {host.Quizzes.map((quiz) => (
+              <li key={quiz.id}>
+                <Link to={`/quiz/${quiz.id}`}>{quiz.name}</Link>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      {host?.QuizSessions && (
+        <>
+          <h2>Quiz Sessions</h2>
+          <ul>
+            {host.QuizSessions.map((session) => (
+              <li key={session.id}>
+                <Link to={`/quiz-session/${session.id}`}>{session.id}</Link>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-import type { Host, Quiz } from "@prisma/client";
+import type { Host, Quiz, QuizSession } from "@prisma/client";
 
 export enum QuestionType {
   multipleChoice = "multipleChoice",
@@ -15,5 +15,6 @@ export enum QuestionType {
 export type QuizWithQuestionCount = Quiz & { _count: { Questions: number } };
 
 export type HostWithQuizzes = Host & {
-  Quizzes: QuizWithQuestions[];
+  Quizzes: Quiz[];
+  QuizSessions: QuizSession[];
 };
