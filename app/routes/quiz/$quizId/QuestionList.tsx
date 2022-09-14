@@ -1,4 +1,4 @@
-import { useFetcher, useResolvedPath } from "@remix-run/react";
+import { Form, useFetcher, useResolvedPath } from "@remix-run/react";
 import { useCallback, useEffect, useState } from "react";
 import type { IProps as MovableProps } from "react-movable";
 import { List, arrayMove } from "react-movable";
@@ -53,6 +53,11 @@ export default function QuestionList({
     ({ value, props }) => (
       <li {...props}>
         <QuestionComponent {...value} />
+        <Form method="post" replace>
+          <input type="hidden" name="questionId" value={value.id} />
+          <input type="hidden" name="_method" value="delete" />
+          <button type="submit">Delete</button>
+        </Form>
       </li>
     ),
     []
