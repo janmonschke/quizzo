@@ -16,9 +16,11 @@ export default function QuestionComponent({
 }: MinimalQuestion) {
   return (
     <div>
-      <div>{questionText}</div>
       <div>
-        <strong>{answer}</strong> ({points}p)
+        {questionText} ({points}p)
+      </div>
+      <div>
+        <strong>{answer}</strong>
       </div>
       {answerOptions && (
         <ol>
