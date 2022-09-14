@@ -2,6 +2,8 @@ import { Form, useFetcher, useResolvedPath } from "@remix-run/react";
 import { useCallback, useEffect, useState } from "react";
 import type { IProps as MovableProps } from "react-movable";
 import { List, arrayMove } from "react-movable";
+import cx from "classnames";
+import { Button } from "~/components/Buttons";
 import { getNewPosition } from "~/helpers/get_new_position";
 import type { MinimalQuestion } from "../../../components/Question";
 import QuestionComponent from "../../../components/Question";
@@ -50,13 +52,20 @@ export default function QuestionList({
     []
   );
   const renderItem = useCallback<MovableProps<MinimalQuestion>["renderItem"]>(
-    ({ value, props }) => (
-      <li {...props}>
+    ({ value, props, isSelected, isDragged }) => (
+      <li
+        {...props}
+        className={cx(
+          "py-2",
+          "list-disc",
+          isDragged ? "bg-slate-100 p-2 opacity-90 cursor-move" : ""
+        )}
+      >
         <QuestionComponent {...value} />
         <Form method="post" replace>
           <input type="hidden" name="questionId" value={value.id} />
           <input type="hidden" name="_method" value="delete" />
-          <button type="submit">Delete</button>
+          <Button type="submit">Delete</Button>
         </Form>
       </li>
     ),

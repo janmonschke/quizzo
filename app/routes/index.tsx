@@ -3,6 +3,7 @@ import { json } from "@remix-run/node";
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import type { HostWithQuizzes } from "~/types";
 import { db } from "~/db.server";
+import { H1, H2 } from "~/components/Headlines";
 
 type LoaderData = {
   host: HostWithQuizzes | null;
@@ -25,13 +26,13 @@ export default function Index() {
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
-      <h1>Welcome to Quizzo</h1>
+      <H1>Welcome to Quizzo</H1>
 
       {host && host.name}
 
       {host?.Quizzes && (
         <>
-          <h2>Quizzes</h2>
+          <H2>Quizzes</H2>
           <ul>
             {host.Quizzes.map((quiz) => (
               <li key={quiz.id}>
@@ -44,7 +45,7 @@ export default function Index() {
 
       {host?.QuizSessions && (
         <>
-          <h2>Quiz Sessions</h2>
+          <H2>Quiz Sessions</H2>
           <ul>
             {host.QuizSessions.map((session) => (
               <li key={session.id}>

@@ -22,13 +22,7 @@ export default function Teams({ teams }: { teams: LoadedTeam[] }) {
   );
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-around",
-      }}
-    >
+    <div className="flex flex-row justify-evenly">
       {sortedTeams.map((team) => (
         <TeamComponent key={team.name} team={team} />
       ))}

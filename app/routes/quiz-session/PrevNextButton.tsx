@@ -1,5 +1,6 @@
 import type { Question, QuizSession } from "@prisma/client";
 import { Form, useResolvedPath } from "@remix-run/react";
+import { Button } from "~/components/Buttons";
 
 export default function ({
   questions,
@@ -13,19 +14,19 @@ export default function ({
   const { pathname } = useResolvedPath("update-position");
   const newPosition = quizSession.currentPosition + direction;
   const canGoDirection =
-    direction === 1 ? newPosition < questions.length - 1 : newPosition >= 0;
+    direction === 1 ? newPosition <= questions.length - 1 : newPosition >= 0;
   const text = direction === 1 ? "Next" : "Previous";
 
   return (
     <Form method="post" action={pathname}>
-      <button
+      <Button
         type="submit"
         name="newPosition"
         value={newPosition}
         disabled={!canGoDirection}
       >
         {text}
-      </button>
+      </Button>
     </Form>
   );
 }

@@ -5,6 +5,7 @@ import { json } from "@remix-run/node";
 import { db } from "~/db.server";
 import QuestionForm from "./QuestionForm";
 import QuestionList from "./QuestionList";
+import { H2 } from "~/components/Headlines";
 
 type LoaderData = {
   questions: Question[] | null;
@@ -96,7 +97,7 @@ export default function Questions() {
   return (
     <div>
       <QuestionList questions={questions} />
-      <h2>Add a new question</h2>
+      <H2>Add a new question</H2>
       <QuestionForm questions={questions} />
     </div>
   );

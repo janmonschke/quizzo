@@ -2,6 +2,7 @@ import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
+import { Button } from "~/components/Buttons";
 import { db } from "~/db.server";
 import { distributeTeams } from "~/helpers/distribute_teams";
 import { serializeArrayString } from "~/helpers/string_arrays";
@@ -80,7 +81,7 @@ export default function Index() {
           />
         </label>
       </div>
-      <button type="submit">Create Session</button>
+      <Button type="submit">Create Session</Button>
     </Form>
   );
 }

@@ -1,5 +1,6 @@
 import { useFetcher } from "@remix-run/react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Button } from "~/components/Buttons";
 import { serializeArrayString } from "~/helpers/string_arrays";
 import { QuestionType } from "~/types";
 import type { MinimalQuestion } from "../../../components/Question";
@@ -83,7 +84,7 @@ export default function QuestionForm({
             {answerOptions.map((option) => (
               <div key={option}>
                 <input type="text" value={option} readOnly />
-                <button onClick={() => removeAnswerOption(option)}>X</button>
+                <Button onClick={() => removeAnswerOption(option)}>X</Button>
               </div>
             ))}
             <div>
@@ -111,9 +112,9 @@ export default function QuestionForm({
       ) : null}
       <input type="hidden" name="position" value={position} />
       <div>
-        <button type="submit" className="button" disabled={hasSubmission}>
+        <Button type="submit" className="button" disabled={hasSubmission}>
           Add
-        </button>
+        </Button>
       </div>
     </fetcher.Form>
   );

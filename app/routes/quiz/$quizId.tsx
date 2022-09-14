@@ -3,6 +3,7 @@ import { json } from "@remix-run/node";
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import type { QuizWithQuestionCount } from "~/types";
 import { db } from "~/db.server";
+import { H1 } from "~/components/Headlines";
 
 type LoaderData = {
   quiz: QuizWithQuestionCount | null;
@@ -32,7 +33,7 @@ export default function Index() {
 
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
-      <h1>{quiz?.name}</h1>
+      <H1>{quiz?.name}</H1>
 
       <Link to={`/quiz-session/new/${quiz?.id}`}>New session from quiz</Link>
 
