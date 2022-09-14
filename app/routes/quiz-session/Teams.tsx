@@ -16,9 +16,10 @@ export default function Teams({ teams }: { teams: LoadedTeam[] }) {
       }),
     [teams]
   );
-  const sortedTeams = useMemo(() => {
-    return [...teamsWithPoints].sort((a, b) => b.points - a.points);
-  }, [teamsWithPoints]);
+  const sortedTeams = useMemo(
+    () => [...teamsWithPoints].sort((a, b) => b.points - a.points),
+    [teamsWithPoints]
+  );
 
   return (
     <div

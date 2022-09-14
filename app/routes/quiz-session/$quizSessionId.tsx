@@ -55,7 +55,6 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 export default function QuizSessionComponent() {
   const { quizSession } = useLoaderData<LoaderData>();
-  console.log(quizSession);
   const question = quizSession.quiz.Questions[quizSession.currentPosition];
 
   return (
