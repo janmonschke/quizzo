@@ -19,15 +19,18 @@ function TeamComponent({ team }: { team: LoadedTeam }) {
     (acc, point) => acc + point.points,
     0
   );
+  const pointsText =
+    points === 0 || points > 1 ? `${points} points` : `${points} point`;
   return (
-    <ul>
-      <li key={team.name}>
-        <strong>{team.name}</strong>
-      </li>
-      {members.map((member) => (
-        <li key={member}>{member}</li>
-      ))}
-      <li key="points">{points} points</li>
-    </ul>
+    <details open>
+      <summary>
+        {team.name} - {pointsText}
+      </summary>
+      <ul>
+        {members.map((member) => (
+          <li key={member}>{member}</li>
+        ))}
+      </ul>
+    </details>
   );
 }
