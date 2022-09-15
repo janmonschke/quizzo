@@ -53,7 +53,7 @@ export default function QuestionList({
     []
   );
   const renderItem = useCallback<MovableProps<MinimalQuestion>["renderItem"]>(
-    ({ value, props, isSelected, isDragged }) => (
+    ({ value, props, isDragged }) => (
       <li
         {...props}
         className={cx(
@@ -69,7 +69,16 @@ export default function QuestionList({
           <Form
             method="post"
             replace
-            className="opacity-0 group-hover:opacity-100 transition-opacity duration-75 absolute right-2 bottom-4 cursor-default"
+            className={cx(
+              "opacity-0",
+              !isDragged && "group-hover:opacity-100",
+              "transition-opacity",
+              "duration-75",
+              "absolute",
+              "right-2",
+              "bottom-4",
+              "cursor-default"
+            )}
           >
             <input type="hidden" name="questionId" value={value.id} />
             <input type="hidden" name="_method" value="delete" />

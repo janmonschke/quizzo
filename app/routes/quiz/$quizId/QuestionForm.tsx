@@ -14,8 +14,8 @@ export default function QuestionForm({
 }) {
   const fetcher = useFetcher();
   const hasSubmission = !!fetcher.submission;
-  const [questionType, setQuestionType] = useState(QuestionType.freeForm);
-  const [answerOptions, setAnswerOptions] = useState<string[]>([]);
+  const [questionType, setQuestionType] = useState(QuestionType.multipleChoice);
+  const [answerOptions, setAnswerOptions] = useState<string[]>(["test"]);
   const formRef = useRef<HTMLFormElement>(null);
 
   const changeQuestionType = useCallback(
@@ -53,16 +53,18 @@ export default function QuestionForm({
   const lastItem = questions[questions.length - 1];
   const position = lastItem ? lastItem.position + 1 : 1000;
 
+  const sendAnswerOptions = questionType === QuestionType.multipleChoice;
+
   return (
     <fetcher.Form
       method="post"
       style={{ opacity: hasSubmission ? 0.25 : 1 }}
       replace
       ref={formRef}
-      className="flex flex-col gap-1"
+      className="flex flex-col gap-2"
     >
       <label>
-        Question type:{" "}
+        <div>Question type:</div>
         <Select value={questionType} name="type" onChange={changeQuestionType}>
           <option value={QuestionType.freeForm}>
             Free form (anything goes)
@@ -72,42 +74,52 @@ export default function QuestionForm({
       </label>
       <div>
         <label>
-          Question: <Input type="text" name="questionText" />
+          <div>Question:</div>
+          <Input type="text" name="questionText" />
         </label>
       </div>
       <div>
         <label>
-          Answer: <Input type="text" name="answer" />
+          <div>Answer:</div>
+          <Input type="text" name="answer" />
         </label>
       </div>
       {questionType === QuestionType.multipleChoice && (
         <div>
           <label>
-            Answer options:{" "}
-            {answerOptions.map((option) => (
-              <div key={option}>
-                <Input type="text" value={option} readOnly />
-                <Button onClick={() => removeAnswerOption(option)}>X</Button>
+            Answer options:
+            <div className="flex flex-col gap-1">
+              {answerOptions.map((option) => (
+                <div key={option}>
+                  <Input type="text" value={option} readOnly className="mr-2" />
+                  <Button
+                    aria-label={`Remove answer option ${option}`}
+                    onClick={() => removeAnswerOption(option)}
+                    kind="alert"
+                  >
+                    X
+                  </Button>
+                </div>
+              ))}
+              <div>
+                <Input
+                  type="text"
+                  key="EMPTYONE"
+                  onKeyDown={addAnswerOption}
+                  placeholder="Add a new answer option"
+                />
               </div>
-            ))}
-            <div>
-              <Input
-                type="text"
-                key="EMPTYONE"
-                onKeyDown={addAnswerOption}
-                placeholder="Add a new answer option"
-              />
             </div>
           </label>
         </div>
       )}
       <div>
         <label>
-          Points:{" "}
+          <div>Points:</div>
           <Input type="number" name="points" defaultValue={1} required />
         </label>
       </div>
-      {answerOptions.length ? (
+      {sendAnswerOptions ? (
         <Input
           type="hidden"
           name="answerOptions"
@@ -115,7 +127,7 @@ export default function QuestionForm({
         />
       ) : null}
       <Input type="hidden" name="position" value={position} />
-      <div>
+      <div className="mt-2">
         <Button type="submit" className="button" disabled={hasSubmission}>
           Add
         </Button>

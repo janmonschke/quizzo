@@ -24,6 +24,7 @@ export default function ({
         name="newPosition"
         value={newPosition}
         disabled={!canGoDirection}
+        size="sm"
       >
         {text}
       </Button>

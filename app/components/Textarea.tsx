@@ -1,11 +1,11 @@
 import React from "react";
 import cx from "classnames";
 
-type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
+type TextAreaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 
-export const Input: React.FC<InputProps> = (props) => {
+export const TextArea: React.FC<TextAreaProps> = (props) => {
   return (
-    <input
+    <textarea
       {...props}
       className={cx(
         "p-2",

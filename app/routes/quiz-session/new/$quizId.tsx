@@ -3,7 +3,9 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { Button } from "~/components/Buttons";
+import { H1 } from "~/components/Headlines";
 import { Input } from "~/components/Input";
+import { TextArea } from "~/components/Textarea";
 import { db } from "~/db.server";
 import { distributeTeams } from "~/helpers/distribute_teams";
 import { serializeArrayString } from "~/helpers/string_arrays";
@@ -61,16 +63,20 @@ export default function Index() {
   const { quizId } = useLoaderData<LoaderData>();
 
   return (
-    <Form method="post">
-      <input type="hidden" name="quizId" value={quizId} />
-      <div>
+    <div>
+      <H1>Start a new session</H1>
+      <Form method="post" className="flex flex-col gap-2">
+        <input type="hidden" name="quizId" value={quizId} />
         <label>
-          Players: <textarea name="players" defaultValue="" />
+          <div>Players:</div>
+          <TextArea
+            name="players"
+            defaultValue=""
+            placeholder="Add one player per row"
+          />
         </label>
-      </div>
-      <div>
         <label>
-          Amount of teams:{" "}
+          <div>Amount of teams:</div>
           <Input
             type="number"
             min="1"
@@ -81,8 +87,10 @@ export default function Index() {
             defaultValue={1}
           />
         </label>
-      </div>
-      <Button type="submit">Create Session</Button>
-    </Form>
+        <div>
+          <Button type="submit">Create Session</Button>
+        </div>
+      </Form>
+    </div>
   );
 }

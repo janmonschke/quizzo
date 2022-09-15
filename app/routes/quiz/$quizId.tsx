@@ -4,7 +4,7 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import type { QuizWithQuestionCount } from "~/types";
 import { db } from "~/db.server";
 import { H1 } from "~/components/Headlines";
-import { Link } from "~/components/Link";
+import { Button } from "~/components/Buttons";
 
 type LoaderData = {
   quiz: QuizWithQuestionCount | null;
@@ -33,10 +33,14 @@ export default function Index() {
   const { quiz } = useLoaderData<LoaderData>();
 
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
-      <H1>{quiz?.name}</H1>
+    <div>
+      <div className="flex flex-row items-center justify-between gap-2">
+        <H1>{quiz?.name}</H1>
 
-      <Link to={`/quiz-session/new/${quiz?.id}`}>New session from quiz</Link>
+        <Button as="link" to={`/quiz-session/new/${quiz?.id}`} kind="ghost">
+          New session
+        </Button>
+      </div>
 
       <p>This quiz has {quiz?._count.Questions} question(s)</p>
 
