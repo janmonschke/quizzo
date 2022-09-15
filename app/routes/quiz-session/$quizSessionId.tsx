@@ -10,7 +10,7 @@ import type {
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { H1 } from "~/components/Headlines";
+import { H1, H2 } from "~/components/Headlines";
 import QuestionComponent from "~/components/Question";
 import { db } from "~/db.server";
 import PrevNextButton from "./PrevNextButton";
@@ -59,14 +59,15 @@ export default function QuizSessionComponent() {
   const question = quizSession.quiz.Questions[quizSession.currentPosition];
 
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       <H1>{quizSession.quiz.name}</H1>
+
       <Teams teams={quizSession.Teams} />
 
-      <span>
+      <H2>
         Question {quizSession.currentPosition + 1} of{" "}
         {quizSession.quiz.Questions.length}
-      </span>
+      </H2>
       <div className="flex gap-2 my-2">
         <PrevNextButton
           questions={quizSession.quiz.Questions}

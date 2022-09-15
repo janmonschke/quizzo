@@ -17,8 +17,8 @@ export default function TeamAnswer({
   const { pathname: awardPointsPath } = useResolvedPath("answer/award-points");
 
   return (
-    <div>
-      Team {team.name}:{" "}
+    <div className="flex items-center gap-2">
+      <div>Team {team.name}: </div>
       {answer ? (
         <>
           <Input type="text" value={answer.answer} readOnly disabled />

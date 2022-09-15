@@ -1,5 +1,6 @@
 import type { AwardedPoints, Team } from "@prisma/client";
 import { useMemo } from "react";
+import { Card } from "~/components/Card";
 import { parseArrayString } from "~/helpers/string_arrays";
 
 type LoadedTeam = Team & { AwardedPoints: AwardedPoints[] };
@@ -22,7 +23,7 @@ export default function Teams({ teams }: { teams: LoadedTeam[] }) {
   );
 
   return (
-    <div className="flex flex-row justify-evenly">
+    <div className="flex flex-row gap-4">
       {sortedTeams.map((team) => (
         <TeamComponent key={team.name} team={team} />
       ))}
@@ -39,15 +40,17 @@ function TeamComponent({ team }: { team: LoadedTeam }) {
   const pointsText =
     points === 0 || points > 1 ? `${points} points` : `${points} point`;
   return (
-    <details open>
-      <summary>
-        Team {team.name} - {pointsText}
-      </summary>
-      <ul>
-        {members.map((member) => (
-          <li key={member}>{member}</li>
-        ))}
-      </ul>
-    </details>
+    <Card>
+      <details open>
+        <summary>
+          Team {team.name} - {pointsText}
+        </summary>
+        <ul>
+          {members.map((member) => (
+            <li key={member}>{member}</li>
+          ))}
+        </ul>
+      </details>
+    </Card>
   );
 }
