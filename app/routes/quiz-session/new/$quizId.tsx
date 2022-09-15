@@ -3,6 +3,7 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { Button } from "~/components/Buttons";
+import { Input } from "~/components/Input";
 import { db } from "~/db.server";
 import { distributeTeams } from "~/helpers/distribute_teams";
 import { serializeArrayString } from "~/helpers/string_arrays";
@@ -70,7 +71,7 @@ export default function Index() {
       <div>
         <label>
           Amount of teams:{" "}
-          <input
+          <Input
             type="number"
             min="1"
             max="10"

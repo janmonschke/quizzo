@@ -3,6 +3,7 @@ import { redirect } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import { Button } from "~/components/Buttons";
 import { H1 } from "~/components/Headlines";
+import { Input } from "~/components/Input";
 import { db } from "~/db.server";
 
 export const action: ActionFunction = async ({ request }) => {
@@ -28,7 +29,7 @@ export default function NewQuiz() {
       <H1>Create a new quiz</H1>
       <Form method="post" replace>
         <label>
-          Quiz name: <input type="text" name="name" required />
+          Quiz name: <Input type="text" name="name" required />
         </label>
         <Button type="submit">Create</Button>
       </Form>

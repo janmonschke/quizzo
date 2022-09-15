@@ -17,12 +17,9 @@ export default function QuestionComponent({
   return (
     <div className="flex flex-col gap-2">
       <div>
-        <span className="text-lg">{questionText}</span>
+        <span className="text-xl">{questionText}</span>
       </div>
       <div>Points: {points}</div>
-      <div>
-        Answer: <strong>{answer}</strong>
-      </div>
       {answerOptions && (
         <>
           Options:
@@ -33,6 +30,9 @@ export default function QuestionComponent({
           </ol>
         </>
       )}
+      <div>
+        Answer: <strong>{answer}</strong>
+      </div>
     </div>
   );
 }

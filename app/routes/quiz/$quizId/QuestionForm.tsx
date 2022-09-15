@@ -1,6 +1,8 @@
 import { useFetcher } from "@remix-run/react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "~/components/Buttons";
+import { Input } from "~/components/Input";
+import { Select } from "~/components/Select";
 import { serializeArrayString } from "~/helpers/string_arrays";
 import { QuestionType } from "~/types";
 import type { MinimalQuestion } from "../../../components/Question";
@@ -57,24 +59,25 @@ export default function QuestionForm({
       style={{ opacity: hasSubmission ? 0.25 : 1 }}
       replace
       ref={formRef}
+      className="flex flex-col gap-1"
     >
       <label>
         Question type:{" "}
-        <select value={questionType} name="type" onChange={changeQuestionType}>
+        <Select value={questionType} name="type" onChange={changeQuestionType}>
           <option value={QuestionType.freeForm}>
             Free form (anything goes)
           </option>
           <option value={QuestionType.multipleChoice}>Multiple Choice</option>
-        </select>
+        </Select>
       </label>
       <div>
         <label>
-          Question: <input type="text" name="questionText" />
+          Question: <Input type="text" name="questionText" />
         </label>
       </div>
       <div>
         <label>
-          Answer: <input type="text" name="answer" />
+          Answer: <Input type="text" name="answer" />
         </label>
       </div>
       {questionType === QuestionType.multipleChoice && (
@@ -83,12 +86,12 @@ export default function QuestionForm({
             Answer options:{" "}
             {answerOptions.map((option) => (
               <div key={option}>
-                <input type="text" value={option} readOnly />
+                <Input type="text" value={option} readOnly />
                 <Button onClick={() => removeAnswerOption(option)}>X</Button>
               </div>
             ))}
             <div>
-              <input
+              <Input
                 type="text"
                 key="EMPTYONE"
                 onKeyDown={addAnswerOption}
@@ -100,17 +103,18 @@ export default function QuestionForm({
       )}
       <div>
         <label>
-          Points: <input type="numer" name="points" defaultValue={1} />
+          Points:{" "}
+          <Input type="number" name="points" defaultValue={1} required />
         </label>
       </div>
       {answerOptions.length ? (
-        <input
+        <Input
           type="hidden"
           name="answerOptions"
           value={serializeArrayString(answerOptions)}
         />
       ) : null}
-      <input type="hidden" name="position" value={position} />
+      <Input type="hidden" name="position" value={position} />
       <div>
         <Button type="submit" className="button" disabled={hasSubmission}>
           Add

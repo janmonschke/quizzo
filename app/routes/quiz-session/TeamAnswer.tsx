@@ -1,5 +1,6 @@
 import type { Answer, AwardedPoints, Question, Team } from "@prisma/client";
 import { Form, useResolvedPath } from "@remix-run/react";
+import { Input } from "~/components/Input";
 
 export default function TeamAnswer({
   team,
@@ -20,15 +21,15 @@ export default function TeamAnswer({
       Team {team.name}:{" "}
       {answer ? (
         <>
-          <input type="text" value={answer.answer} readOnly disabled />
+          <Input type="text" value={answer.answer} readOnly disabled />
           {awardedPoints ? (
-            <input type="text" value={awardedPoints.points} readOnly disabled />
+            <Input type="text" value={awardedPoints.points} readOnly disabled />
           ) : (
             <Form method="post" action={awardPointsPath}>
-              <input type="hidden" name="answerId" value={answer.id} />
-              <input type="hidden" name="teamId" value={team.id} />
+              <Input type="hidden" name="answerId" value={answer.id} />
+              <Input type="hidden" name="teamId" value={team.id} />
               <label>
-                <input
+                <Input
                   type="number"
                   name="points"
                   placeholder="Points"
@@ -42,10 +43,10 @@ export default function TeamAnswer({
         </>
       ) : (
         <Form method="post" action={newAnswerPath}>
-          <input type="hidden" name="questionId" value={question.id} />
-          <input type="hidden" name="teamId" value={team.id} />
+          <Input type="hidden" name="questionId" value={question.id} />
+          <Input type="hidden" name="teamId" value={team.id} />
           <label>
-            <input type="text" name="answer" placeholder="Answer" required />
+            <Input type="text" name="answer" placeholder="Answer" required />
           </label>
         </Form>
       )}
