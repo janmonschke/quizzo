@@ -14,8 +14,8 @@ export default function QuestionForm({
 }) {
   const fetcher = useFetcher();
   const hasSubmission = !!fetcher.submission;
-  const [questionType, setQuestionType] = useState(QuestionType.multipleChoice);
-  const [answerOptions, setAnswerOptions] = useState<string[]>(["test"]);
+  const [questionType, setQuestionType] = useState(QuestionType.freeForm);
+  const [answerOptions, setAnswerOptions] = useState<string[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
 
   const changeQuestionType = useCallback(
