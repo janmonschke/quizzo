@@ -1,9 +1,10 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link, Outlet, useLoaderData } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import type { QuizWithQuestionCount } from "~/types";
 import { db } from "~/db.server";
 import { H1 } from "~/components/Headlines";
+import { Link } from "~/components/Link";
 
 type LoaderData = {
   quiz: QuizWithQuestionCount | null;

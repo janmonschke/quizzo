@@ -73,7 +73,7 @@ export default function QuestionList({
           >
             <input type="hidden" name="questionId" value={value.id} />
             <input type="hidden" name="_method" value="delete" />
-            <Button type="submit" size="sm">
+            <Button type="submit" size="sm" kind="alert">
               Delete
             </Button>
           </Form>
