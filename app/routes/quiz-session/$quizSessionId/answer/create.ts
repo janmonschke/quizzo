@@ -9,6 +9,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
   const body = await request.formData();
   const answer = body.get("answer")?.toString();
+  const answerId = body.get("answerId")?.toString();
   const questionId = body.get("questionId")?.toString();
   const teamId = body.get("teamId")?.toString();
 
@@ -16,14 +17,28 @@ export const action: ActionFunction = async ({ request, params }) => {
     throw new Error("Not all required attributes were passed");
   }
 
-  await db.answer.create({
-    data: {
-      answer,
-      questionId,
-      quizSessionId,
-      teamId,
-    },
-  });
+  if (answerId) {
+    await db.answer.update({
+      where: {
+        id: answerId,
+      },
+      data: {
+        answer,
+        questionId,
+        quizSessionId,
+        teamId,
+      },
+    });
+  } else {
+    await db.answer.create({
+      data: {
+        answer,
+        questionId,
+        quizSessionId,
+        teamId,
+      },
+    });
+  }
 
   return redirect(`/quiz-session/${quizSessionId}`);
 };

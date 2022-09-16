@@ -64,23 +64,24 @@ export default function QuizSessionComponent() {
 
       <Teams teams={quizSession.Teams} />
 
-      <H2>
-        Question {quizSession.currentPosition + 1} of{" "}
-        {quizSession.quiz.Questions.length}
-      </H2>
-      <div className="flex gap-2 my-2">
-        <PrevNextButton
-          questions={quizSession.quiz.Questions}
-          direction={-1}
-          quizSession={quizSession}
-        />
-        <PrevNextButton
-          questions={quizSession.quiz.Questions}
-          direction={1}
-          quizSession={quizSession}
-        />
+      <div className="flex gap-4">
+        <H2>
+          Question {quizSession.currentPosition + 1} of{" "}
+          {quizSession.quiz.Questions.length}
+        </H2>
+        <div className="flex gap-2 my-2">
+          <PrevNextButton
+            questions={quizSession.quiz.Questions}
+            direction={-1}
+            quizSession={quizSession}
+          />
+          <PrevNextButton
+            questions={quizSession.quiz.Questions}
+            direction={1}
+            quizSession={quizSession}
+          />
+        </div>
       </div>
-
       <QuestionComponent {...question} />
       {quizSession.Teams.map((team) => {
         const answer = quizSession.Answers.find(
