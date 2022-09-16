@@ -10,6 +10,7 @@ export function Timer() {
   const [current, send] = useMachine(timerMachine);
 
   const remainingTimeText = timeString(current.context.remainingSeconds);
+  const percentage = (100 * current.context.remainingSeconds) / durationS;
 
   let content = null;
   if (current.matches("idle")) {
@@ -74,6 +75,7 @@ export function Timer() {
   return (
     <div
       className={cx(
+        "relative",
         "flex",
         "items-center",
         "gap-1",
@@ -82,6 +84,10 @@ export function Timer() {
       )}
     >
       {content}
+      <div
+        className="absolute bottom-0 left-0 bg-cyan-400 rounded-lg transition-all"
+        style={{ height: 2, width: `${percentage}%`, marginBottom: -4 }}
+      ></div>
     </div>
   );
 }
