@@ -12,6 +12,7 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { H1, H2 } from "~/components/Headlines";
 import QuestionComponent from "~/components/Question";
+import { Timer } from "~/components/Timer";
 import { db } from "~/db.server";
 import PrevNextButton from "./PrevNextButton";
 import TeamAnswer from "./TeamAnswer";
@@ -61,26 +62,27 @@ export default function QuizSessionComponent() {
   return (
     <div className="flex flex-col gap-2">
       <H1>{quizSession.quiz.name}</H1>
-
       <Teams teams={quizSession.Teams} />
-
-      <div className="flex gap-4">
-        <H2>
-          Question {quizSession.currentPosition + 1} of{" "}
-          {quizSession.quiz.Questions.length}
-        </H2>
-        <div className="flex gap-2 my-2">
-          <PrevNextButton
-            questions={quizSession.quiz.Questions}
-            direction={-1}
-            quizSession={quizSession}
-          />
-          <PrevNextButton
-            questions={quizSession.quiz.Questions}
-            direction={1}
-            quizSession={quizSession}
-          />
+      <div className="flex justify-between items-center">
+        <div className="flex gap-4">
+          <H2>
+            Question {quizSession.currentPosition + 1} of{" "}
+            {quizSession.quiz.Questions.length}
+          </H2>
+          <div className="flex gap-2 my-2">
+            <PrevNextButton
+              questions={quizSession.quiz.Questions}
+              direction={-1}
+              quizSession={quizSession}
+            />
+            <PrevNextButton
+              questions={quizSession.quiz.Questions}
+              direction={1}
+              quizSession={quizSession}
+            />
+          </div>
         </div>
+        <Timer />
       </div>
       <QuestionComponent {...question} />
       {quizSession.Teams.map((team) => {
