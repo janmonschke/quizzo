@@ -47,7 +47,13 @@ export const loader: LoaderFunction = async ({ params }) => {
       },
       host: true,
       quiz: {
-        include: { Questions: true },
+        include: {
+          Questions: {
+            orderBy: {
+              position: "asc",
+            },
+          },
+        },
       },
     },
   });
@@ -84,7 +90,9 @@ export default function QuizSessionComponent() {
         </div>
         <Timer />
       </div>
-      <QuestionComponent {...question} />
+      <div className="my-8">
+        <QuestionComponent {...question} />
+      </div>
       {quizSession.Teams.map((team) => {
         const answer = quizSession.Answers.find(
           (answer) =>
@@ -95,7 +103,7 @@ export default function QuizSessionComponent() {
           team.AwardedPoints.find((awp) => answer.id === awp.answerId);
         return (
           <TeamAnswer
-            key={team.id}
+            key={`${team.id}-${question.id}`}
             answer={answer}
             awardedPoints={awardedPoints}
             team={team}
