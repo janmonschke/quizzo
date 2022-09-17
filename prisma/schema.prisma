@@ -42,7 +42,7 @@ model Question {
   // The actual answer
   answer        String
   position      Float
-  points        Int
+  points        Float
   Answer        Answer[]
 }
 
