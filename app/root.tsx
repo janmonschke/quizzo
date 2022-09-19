@@ -25,7 +25,7 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <div className="container mx-auto px-32 mb-8">
+        <div className="container mx-auto px-48 mb-8">
           <Outlet />
         </div>
         <ScrollRestoration />

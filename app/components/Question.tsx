@@ -17,9 +17,13 @@ export default function QuestionComponent({
   return (
     <div className="flex flex-col gap-2">
       <div>
-        <span className="text-lg">{questionText}</span>
+        <span className="text-lg leading-relaxed">{questionText}</span>
       </div>
-      <div>Points: {points}</div>
+      <div>
+        <div className="rounded-full bg-teal-400 text-white inline-block px-2 py-1 text-sm">
+          {points} {points === 1 ? "point" : "points"}
+        </div>
+      </div>
       {answerOptions && (
         <>
           Options:

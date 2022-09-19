@@ -26,7 +26,7 @@ export default function Index() {
   const { host } = useLoaderData<LoaderData>();
 
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
+    <div>
       <H1>Welcome to Quizzo</H1>
 
       {host && host.name}
