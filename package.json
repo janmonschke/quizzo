@@ -13,7 +13,8 @@
     "dev:remix": "remix dev",
     "generate:css": "npx tailwindcss -o ./app/tailwind.css",
     "start": "remix-serve build",
-    "purge_db": "rm prisma/dev.db && prisma db push && prisma db seed",
+    "db:reset": "rm prisma/dev.db && npm run db:setup",
+    "db:setup": "prisma db push && prisma db seed",
     "test": "jest"
   },
   "dependencies": {
