@@ -4,10 +4,6 @@
 
 !! First run: copy the contents of `.env.dev` into `.env` !!
 
-`npx prisma generate` - initialize the db
+`npm run db:setup` - initialize and seed the database
 
-`npx prisma db push` - create the database and the schema
-
-`npx prisma db seed` - seed database
-
-`npm run purge_db` - delete all data, recreated the db and seed it
+`npm run db:reset` - delete all data, recreated the db and seed it
