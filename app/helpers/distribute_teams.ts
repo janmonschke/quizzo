@@ -14,7 +14,7 @@ export function distributeTeams({
   const teams: GeneratedTeam[] = Array(teamCount)
     .fill(undefined)
     .map((_, index) => ({
-      name: (index + 1).toString(),
+      name: `Team ${index + 1}`,
       players: [],
     }));
 

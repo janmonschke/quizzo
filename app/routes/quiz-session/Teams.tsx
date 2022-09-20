@@ -43,7 +43,7 @@ function TeamComponent({ team }: { team: LoadedTeam }) {
     <Card>
       <details open>
         <summary>
-          Team {team.name} - {pointsText}
+          {team.name} - {pointsText}
         </summary>
         <ul>
           {members.map((member) => (
