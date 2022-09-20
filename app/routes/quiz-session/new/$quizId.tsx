@@ -2,6 +2,7 @@ import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
+import { useState } from "react";
 import { Button } from "~/components/Buttons";
 import { H1 } from "~/components/Headlines";
 import { Input } from "~/components/Input";
@@ -28,11 +29,9 @@ export const action: ActionFunction = async ({ request, params }) => {
     throw new Error("quizId missing");
   }
   const body = await request.formData();
-  const players = body.get("players")?.toString().split(/\n/);
+  const players = splitTextIntoRows(body.get("players")?.toString() ?? "");
   const teamCountR = body.get("teamCount")?.toString();
   const teamCount = parseInt(teamCountR || "0");
-
-  console.log(quizId);
 
   const session = await db.quizSession.create({
     data: {
@@ -61,6 +60,10 @@ export const action: ActionFunction = async ({ request, params }) => {
 
 export default function Index() {
   const { quizId } = useLoaderData<LoaderData>();
+  const [teamValue, setTeamValue] = useState("");
+
+  const players = splitTextIntoRows(teamValue);
+  const playerCount = players.length;
 
   return (
     <div>
@@ -68,10 +71,12 @@ export default function Index() {
       <Form method="post" className="flex flex-col gap-2">
         <input type="hidden" name="quizId" value={quizId} />
         <label>
-          <div>Players:</div>
+          <div>Players: {playerCount > 0 && playerCount} </div>
           <TextArea
+            className="block"
             name="players"
-            defaultValue=""
+            value={teamValue}
+            onChange={(e) => setTeamValue(e.target.value)}
             placeholder="Add one player per row"
           />
         </label>
@@ -79,12 +84,13 @@ export default function Index() {
           <div>Amount of teams:</div>
           <Input
             type="number"
-            min="1"
+            min="2"
             max="10"
             step="1"
             pattern="\d+"
             name="teamCount"
-            defaultValue={1}
+            defaultValue={2}
+            required
           />
         </label>
         <div>
@@ -93,4 +99,8 @@ export default function Index() {
       </Form>
     </div>
   );
+}
+
+function splitTextIntoRows(text: string) {
+  return text.split(/\r*\n/).filter(Boolean);
 }
