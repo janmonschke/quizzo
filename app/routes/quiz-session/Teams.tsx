@@ -5,7 +5,13 @@ import { parseArrayString } from "~/helpers/string_arrays";
 
 type LoadedTeam = Team & { AwardedPoints: AwardedPoints[] };
 
-export default function Teams({ teams }: { teams: LoadedTeam[] }) {
+export default function Teams({
+  teams,
+  sessionId,
+}: {
+  teams: LoadedTeam[];
+  sessionId: string;
+}) {
   const teamsWithPoints = useMemo(
     () =>
       teams.map((team) => {
@@ -25,13 +31,19 @@ export default function Teams({ teams }: { teams: LoadedTeam[] }) {
   return (
     <div className="flex flex-row gap-4">
       {sortedTeams.map((team) => (
-        <TeamComponent key={team.name} team={team} />
+        <TeamComponent key={team.name} team={team} sessionId={sessionId} />
       ))}
     </div>
   );
 }
 
-function TeamComponent({ team }: { team: LoadedTeam }) {
+function TeamComponent({
+  team,
+  sessionId,
+}: {
+  team: LoadedTeam;
+  sessionId: string;
+}) {
   const members = parseArrayString(team.members);
   const points = team.AwardedPoints.reduce(
     (acc, point) => acc + point.points,
@@ -50,6 +62,9 @@ function TeamComponent({ team }: { team: LoadedTeam }) {
             <li key={member}>{member}</li>
           ))}
         </ul>
+        <a href={`/quiz-session/${sessionId}/team?teamId=${team.id}`}>
+          Team link
+        </a>
       </details>
     </Card>
   );

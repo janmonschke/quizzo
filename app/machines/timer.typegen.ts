@@ -12,20 +12,20 @@ export interface Typegen0 {
   invokeSrcNameMap: {};
   missingImplementations: {
     actions: never;
-    services: never;
-    guards: never;
     delays: never;
+    guards: never;
+    services: never;
   };
   eventsCausingActions: {
     resetRemainingSeconds: "Reset timer";
     setRemainingSeconds: "Start timer";
     updateRemainingSeconds: "xstate.after(1000)#timer.ticking";
   };
-  eventsCausingServices: {};
+  eventsCausingDelays: {};
   eventsCausingGuards: {
     hasEnded: "";
   };
-  eventsCausingDelays: {};
+  eventsCausingServices: {};
   matchesStates: "ended" | "idle" | "paused" | "ticking";
   tags: never;
 }
