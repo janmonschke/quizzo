@@ -1,7 +1,7 @@
 import type { AwardedPoints, Team } from "@prisma/client";
 import { useMemo } from "react";
-import { Card } from "~/components/Card";
-import { parseArrayString } from "~/helpers/string_arrays";
+import { Card } from "../Card";
+import { parseArrayString } from "../../helpers/string_arrays";
 
 type LoadedTeam = Team & { AwardedPoints: AwardedPoints[] };
 

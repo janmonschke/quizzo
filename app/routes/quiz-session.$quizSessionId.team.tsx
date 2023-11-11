@@ -1,4 +1,4 @@
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { useEffect } from "react";
@@ -6,7 +6,7 @@ import { H1, H2 } from "~/components/Headlines";
 import TeamQuestion from "~/components/TeamQuestion";
 import { db } from "~/db.server";
 
-export const loader = async ({ params, request }: LoaderArgs) => {
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const { quizSessionId } = params;
   const url = new URL(request.url);
   const teamId = url.searchParams.get("teamId");
@@ -52,11 +52,11 @@ export default function QuizSessionComponent() {
   const { quizSession: _session } = useLoaderData<typeof loader>();
   const quizSession = _session!;
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     window.location.reload();
-  //   }, 5000);
-  // });
+  useEffect(() => {
+    setTimeout(() => {
+      window.location.reload();
+    }, 5000);
+  });
 
   const question = quizSession.quiz.Questions[quizSession.currentPosition];
 

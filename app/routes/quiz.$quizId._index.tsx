@@ -1,19 +1,14 @@
-import type { Question } from "@prisma/client";
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type { ActionFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { db } from "~/db.server";
-import QuestionForm from "./QuestionForm";
-import QuestionList from "./QuestionList";
+import QuestionForm from "~/components/quiz/QuestionForm";
+import QuestionList from "~/components/quiz/QuestionList";
 import { H2 } from "~/components/Headlines";
 
-type LoaderData = {
-  questions: Question[] | null;
-};
-
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { quizId } = params;
-  const data: LoaderData = {
+  const data = {
     questions: await db.question.findMany({
       where: {
         quizId,
@@ -88,7 +83,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 };
 
 export default function Questions() {
-  const { questions } = useLoaderData<LoaderData>();
+  const { questions } = useLoaderData<typeof loader>();
 
   if (!questions) {
     return <>Something went wrong</>;

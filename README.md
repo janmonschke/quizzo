@@ -8,6 +8,4 @@ A web app that helps me run pub quizzes.
 
 `npm run db:setup` - initialize and seed the database
 
-`npm run db:reset` - delete all data, recreated the db and seed it
-
 `npm run dev` - starts the app dev server

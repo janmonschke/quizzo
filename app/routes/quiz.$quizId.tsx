@@ -1,36 +1,29 @@
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import type { QuizWithQuestionCount } from "~/types";
 import { db } from "~/db.server";
 import { H1 } from "~/components/Headlines";
 import { Button } from "~/components/Buttons";
 
-type LoaderData = {
-  quiz: QuizWithQuestionCount | null;
-};
-
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { quizId } = params;
-  const data: LoaderData = {
-    quiz: await db.quiz.findFirst({
-      where: {
-        id: quizId,
-      },
-      include: {
-        _count: {
-          select: {
-            Questions: true,
-          },
+  const quiz = await db.quiz.findFirst({
+    where: {
+      id: quizId,
+    },
+    include: {
+      _count: {
+        select: {
+          Questions: true,
         },
       },
-    }),
-  };
-  return json(data);
+    },
+  });
+  return json({ quiz });
 };
 
 export default function Index() {
-  const { quiz } = useLoaderData<LoaderData>();
+  const { quiz } = useLoaderData<typeof loader>();
 
   return (
     <div>

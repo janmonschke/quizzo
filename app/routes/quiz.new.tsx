@@ -29,7 +29,7 @@ export default function NewQuiz() {
       <H1>Create a new quiz</H1>
       <Form method="post" replace>
         <label>
-          Quiz name: <Input type="text" name="name" required />
+          Quiz name: <Input autoFocus type="text" name="name" required />
         </label>
         <Button type="submit">Create</Button>
       </Form>

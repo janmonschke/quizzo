@@ -1,7 +1,7 @@
 import React from "react";
 import cx from "classnames";
-import type { LinkProps as RemixLinkProps } from "@remix-run/react";
-import { Link as RemixLink } from "@remix-run/react";
+import type { LinkProps } from "@remix-run/react";
+import { Link } from "@remix-run/react";
 
 type BaseProps = {
   as?: "button" | "link";
@@ -12,7 +12,7 @@ type BaseProps = {
 type ButtonProps = BaseProps &
   (
     | ({ as?: "button" } & React.ButtonHTMLAttributes<HTMLButtonElement>)
-    | ({ as?: "link" } & RemixLinkProps)
+    | ({ as?: "link" } & LinkProps)
   );
 
 export const Button: React.FC<ButtonProps> = ({
@@ -31,7 +31,7 @@ export const Button: React.FC<ButtonProps> = ({
     "text-sm",
     kind === "primary" && "bg-cyan-500",
     kind === "primary" && "hover:bg-cyan-400",
-    "text-white",
+    kind !== "ghost" && "text-white",
     kind === "alert" && "bg-red-400",
     kind === "alert" && "hover:bg-red-500",
     kind === "ghost" && "border-2",
@@ -46,9 +46,9 @@ export const Button: React.FC<ButtonProps> = ({
   switch (props.as) {
     case "link":
       return (
-        <RemixLink {...props} className={classnames}>
+        <Link {...props} className={classnames}>
           {props.children}
-        </RemixLink>
+        </Link>
       );
     case "button":
       return (

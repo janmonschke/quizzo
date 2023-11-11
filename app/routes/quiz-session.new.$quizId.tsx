@@ -1,6 +1,5 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import type { ActionFunction, LoaderFunctionArgs } from "@remix-run/node";
+import { redirect, json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import { Button } from "~/components/Buttons";
@@ -11,16 +10,13 @@ import { db } from "~/db.server";
 import { distributeTeams } from "~/helpers/distribute_teams";
 import { serializeArrayString } from "~/helpers/string_arrays";
 
-type LoaderData = { quizId: string };
-
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { quizId } = params;
   if (!quizId) {
     throw new Error("quizId missing");
   }
-  const data: LoaderData = { quizId };
 
-  return json(data);
+  return json({ quizId });
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -55,11 +51,11 @@ export const action: ActionFunction = async ({ request, params }) => {
     );
   }
 
-  return redirect(`/quiz-session/${session.id}`);
+  return redirect(`/quiz-session/${session.id}/admin`);
 };
 
 export default function Index() {
-  const { quizId } = useLoaderData<LoaderData>();
+  const { quizId } = useLoaderData<typeof loader>();
   const [teamValue, setTeamValue] = useState("");
 
   const players = splitTextIntoRows(teamValue);

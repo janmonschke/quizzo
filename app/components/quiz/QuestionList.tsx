@@ -3,11 +3,11 @@ import { useCallback, useEffect, useState } from "react";
 import type { IProps as MovableProps } from "react-movable";
 import { List, arrayMove } from "react-movable";
 import cx from "classnames";
-import { Button } from "~/components/Buttons";
+import { Button } from "../Buttons";
 import { getNewPosition } from "~/helpers/get_new_position";
-import type { MinimalQuestion } from "../../../components/Question";
-import QuestionComponent from "../../../components/Question";
-import { Card } from "~/components/Card";
+import type { MinimalQuestion } from "../Question";
+import QuestionComponent from "../Question";
+import { Card } from "../Card";
 
 export default function QuestionList({
   questions,

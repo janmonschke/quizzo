@@ -1,5 +1,5 @@
 import type { Question } from "@prisma/client";
-import { parseArrayString } from "~/helpers/string_arrays";
+import { parseArrayString } from "../helpers/string_arrays";
 
 type Props = Pick<Question, "questionText" | "answerOptions">;
 

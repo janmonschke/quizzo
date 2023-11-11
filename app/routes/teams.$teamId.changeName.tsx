@@ -1,5 +1,5 @@
 import type { ActionFunction } from "@remix-run/node";
-import { db } from "~/db.server";
+import { db } from "../db.server";
 
 export const action: ActionFunction = async ({ request, params }) => {
   const { teamId } = params;

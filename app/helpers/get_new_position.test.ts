@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { getNewPosition } from "./get_new_position";
 
 const positivePositions = [

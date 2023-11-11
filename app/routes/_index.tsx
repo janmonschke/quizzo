@@ -1,4 +1,3 @@
-import type { LinksFunction, LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import type { HostWithQuizzes } from "~/types";
@@ -10,7 +9,7 @@ type LoaderData = {
   host: HostWithQuizzes | null;
 };
 
-export const loader: LoaderFunction = async () => {
+export const loader = async () => {
   const data: LoaderData = {
     host: await db.host.findFirst({
       include: {
@@ -23,7 +22,7 @@ export const loader: LoaderFunction = async () => {
 };
 
 export default function Index() {
-  const { host } = useLoaderData<LoaderData>();
+  const { host } = useLoaderData<typeof loader>();
 
   return (
     <div>

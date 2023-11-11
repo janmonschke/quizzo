@@ -1,34 +1,15 @@
-import type {
-  Answer,
-  AwardedPoints,
-  Host,
-  Question,
-  Quiz,
-  QuizSession,
-  Team,
-} from "@prisma/client";
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { H1, H2 } from "~/components/Headlines";
 import QuestionComponent from "~/components/Question";
 import { Timer } from "~/components/Timer";
 import { db } from "~/db.server";
-import PrevNextButton from "./PrevNextButton";
-import TeamAnswer from "./TeamAnswer";
-import Teams from "./Teams";
+import PrevNextButton from "~/components/quiz-session/PrevNextButton";
+import TeamAnswer from "~/components/quiz-session/TeamAnswer";
+import Teams from "~/components/quiz-session/Teams";
 
-type TeamWithPoints = Team & { AwardedPoints: AwardedPoints[] };
-
-type LoaderData = {
-  quizSession: QuizSession & { Answers: Answer[] } & {
-    Teams: TeamWithPoints[];
-  } & { host: Host } & {
-    quiz: Quiz & { Questions: Question[] };
-  };
-};
-
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { quizSessionId } = params;
   if (!quizSessionId) {
     throw new Error("quizSessionId missing");
@@ -62,13 +43,18 @@ export const loader: LoaderFunction = async ({ params }) => {
 };
 
 export default function QuizSessionComponent() {
-  const { quizSession } = useLoaderData<LoaderData>();
+  const { quizSession } = useLoaderData<typeof loader>();
+
+  if (!quizSession) {
+    return <H1>Could not find quiz session</H1>;
+  }
+
   const question = quizSession.quiz.Questions[quizSession.currentPosition];
 
   return (
     <div className="flex flex-col gap-2">
       <H1>{quizSession.quiz.name}</H1>
-      <Teams teams={quizSession.Teams} />
+      <Teams teams={quizSession.Teams} sessionId={quizSession.id} />
       <div className="flex justify-between items-center">
         <div className="flex gap-4">
           <H2>

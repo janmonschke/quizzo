@@ -1,8 +1,8 @@
 import { useMachine } from "@xstate/react";
 import { useState } from "react";
 import cx from "classnames";
-import { timeString } from "~/helpers/time_string";
-import { timerMachine } from "~/machines/timer";
+import { timeString } from "../helpers/time_string";
+import { timerMachine } from "../machines/timer";
 import { Button } from "./Buttons";
 
 export function Timer() {

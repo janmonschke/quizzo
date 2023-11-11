@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { parseArrayString, serializeArrayString } from "./string_arrays";
 
 describe("Array strings", () => {

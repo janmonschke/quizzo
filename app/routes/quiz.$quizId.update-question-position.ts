@@ -1,7 +1,7 @@
 import type { ActionFunction } from "@remix-run/node";
 import { db } from "~/db.server";
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action: ActionFunction = async ({ request }) => {
   const data = await request.formData();
   const questionId = data.get("questionId");
   const newPosition = data.get("newPosition");

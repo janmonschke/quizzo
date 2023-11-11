@@ -1,6 +1,6 @@
 import type { Answer, AwardedPoints, Question, Team } from "@prisma/client";
 import { Form, useFetcher, useResolvedPath } from "@remix-run/react";
-import { Input } from "~/components/Input";
+import { Input } from "../Input";
 
 export default function TeamAnswer({
   team,

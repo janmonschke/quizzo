@@ -1,8 +1,8 @@
 import type { Question, QuizSession } from "@prisma/client";
 import { Form, useResolvedPath } from "@remix-run/react";
-import { Button } from "~/components/Buttons";
+import { Button } from "../Buttons";
 
-export default function ({
+export default function PrevNextButton({
   questions,
   quizSession,
   direction,

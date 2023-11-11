@@ -1,11 +1,11 @@
 import { useFetcher } from "@remix-run/react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Button } from "~/components/Buttons";
-import { Input } from "~/components/Input";
-import { Select } from "~/components/Select";
+import { Button } from "../Buttons";
+import { Input } from "../Input";
+import { Select } from "../Select";
 import { serializeArrayString } from "~/helpers/string_arrays";
 import { QuestionType } from "~/types";
-import type { MinimalQuestion } from "../../../components/Question";
+import type { MinimalQuestion } from "../Question";
 
 export default function QuestionForm({
   questions,

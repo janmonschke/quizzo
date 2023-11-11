@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { distributeTeams } from "./distribute_teams";
 
 describe("Distribute teams", () => {
