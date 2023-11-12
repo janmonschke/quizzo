@@ -40,5 +40,5 @@ export const action: ActionFunction = async ({ request, params }) => {
     });
   }
 
-  return redirect(`/quiz-session/${quizSessionId}`);
+  return redirect(`/quiz-session/${quizSessionId}/admin`);
 };
