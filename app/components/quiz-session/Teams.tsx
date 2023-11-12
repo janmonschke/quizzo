@@ -64,9 +64,7 @@ function TeamComponent({
             <li key={member}>{member}</li>
           ))}
         </ul>
-        <a href={`/quiz-session/${sessionId}/team?teamId=${team.id}`}>
-          Team link
-        </a>
+        <a href={`/quiz-session/${sessionId}/team/${team.id}`}>Team link</a>
       </details>
     </Card>
   );

@@ -6,14 +6,8 @@ import { H1, H2 } from "~/components/Headlines";
 import TeamQuestion from "~/components/TeamQuestion";
 import { db } from "~/db.server";
 
-export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  const { quizSessionId } = params;
-  const url = new URL(request.url);
-  const teamId = url.searchParams.get("teamId");
-
-  if (!teamId) {
-    throw new Error("teamId missing");
-  }
+export const loader = async ({ params }: LoaderFunctionArgs) => {
+  const { quizSessionId, teamId } = params;
 
   const quizSession = await db.quizSession.findFirst({
     where: {
@@ -42,7 +36,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     },
   });
 
-  return json({ quizSession });
+  return json({ teamId, quizSession });
 };
 
 export default function QuizSessionComponent() {
