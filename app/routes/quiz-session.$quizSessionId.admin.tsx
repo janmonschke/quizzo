@@ -11,9 +11,6 @@ import Teams from "~/components/quiz-session/Teams";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { quizSessionId } = params;
-  if (!quizSessionId) {
-    throw new Error("quizSessionId missing");
-  }
 
   const quizSession = await db.quizSession.findFirst({
     where: {
@@ -50,6 +47,8 @@ export default function QuizSessionComponent() {
   }
 
   const question = quizSession.quiz.Questions[quizSession.currentPosition];
+  const questionsCount = quizSession.quiz.Questions.length - 1;
+  const currentPosition = quizSession.currentPosition;
 
   return (
     <div className="flex flex-col gap-2">
@@ -58,19 +57,19 @@ export default function QuizSessionComponent() {
       <div className="flex justify-between items-center">
         <div className="flex gap-4">
           <H2>
-            Question {quizSession.currentPosition + 1} of{" "}
+            Question {currentPosition + 1} of{" "}
             {quizSession.quiz.Questions.length}
           </H2>
           <div className="flex gap-2 my-2">
             <PrevNextButton
-              questions={quizSession.quiz.Questions}
+              questionsCount={questionsCount}
               direction={-1}
-              quizSession={quizSession}
+              currentPosition={currentPosition}
             />
             <PrevNextButton
-              questions={quizSession.quiz.Questions}
+              questionsCount={questionsCount}
               direction={1}
-              quizSession={quizSession}
+              currentPosition={currentPosition}
             />
           </div>
         </div>

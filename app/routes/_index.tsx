@@ -1,16 +1,11 @@
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import type { HostWithQuizzes } from "~/types";
 import { db } from "~/db.server";
 import { H1, H2 } from "~/components/Headlines";
 import { Link } from "~/components/Link";
 
-type LoaderData = {
-  host: HostWithQuizzes | null;
-};
-
 export const loader = async () => {
-  const data: LoaderData = {
+  const data = {
     host: await db.host.findFirst({
       include: {
         Quizzes: true,
