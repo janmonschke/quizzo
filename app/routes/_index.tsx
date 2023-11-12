@@ -49,7 +49,9 @@ export default function Index() {
           <ul>
             {host.QuizSessions.map((session) => (
               <li key={session.id}>
-                <Link to={`/quiz-session/${session.id}`}>{session.id}</Link>
+                <Link to={`/quiz-session/${session.id}/admin`}>
+                  {session.id}
+                </Link>
               </li>
             ))}
           </ul>
