@@ -11,9 +11,6 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const teamId = url.searchParams.get("teamId");
 
-  if (!quizSessionId) {
-    throw new Error("quizSessionId missing");
-  }
   if (!teamId) {
     throw new Error("teamId missing");
   }
