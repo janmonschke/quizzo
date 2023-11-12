@@ -8,10 +8,10 @@ export default function TeamAnswer({
   answer,
   awardedPoints,
 }: {
-  team: Team;
-  question: Question;
-  answer?: Answer;
-  awardedPoints?: AwardedPoints;
+  team: Pick<Team, "id" | "name">;
+  question: Pick<Question, "id" | "points">;
+  answer?: Pick<Answer, "id" | "answer">;
+  awardedPoints?: Pick<AwardedPoints, "id" | "points">;
 }) {
   const fetcher = useFetcher();
   const { pathname: createAnswerPath } = useResolvedPath("answer/create");

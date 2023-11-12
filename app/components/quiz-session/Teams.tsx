@@ -3,7 +3,9 @@ import { useMemo } from "react";
 import { Card } from "../Card";
 import { parseArrayString } from "../../helpers/string_arrays";
 
-type LoadedTeam = Team & { AwardedPoints: AwardedPoints[] };
+type LoadedTeam = Pick<Team, "id" | "name" | "members"> & {
+  AwardedPoints: Pick<AwardedPoints, "points">[];
+};
 
 export default function Teams({
   teams,
