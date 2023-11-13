@@ -5,8 +5,17 @@ import { Button } from "~/components/Buttons";
 import { H1 } from "~/components/Headlines";
 import { Input } from "~/components/Input";
 import { db } from "~/db.server";
+import { authenticator } from "~/services/auth.server";
 
 export const action: ActionFunction = async ({ request }) => {
+  const host = await authenticator.isAuthenticated(request);
+
+  if (!host) {
+    throw new Response("Forbidden", {
+      status: 403,
+    });
+  }
+
   const body = await request.formData();
   const name = body.get("name");
   if (typeof name !== "string") {
@@ -16,7 +25,7 @@ export const action: ActionFunction = async ({ request }) => {
   const quiz = await db.quiz.create({
     data: {
       name,
-      hostId: "1",
+      hostId: host.id,
     },
   });
 

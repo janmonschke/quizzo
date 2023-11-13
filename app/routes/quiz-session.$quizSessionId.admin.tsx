@@ -9,13 +9,22 @@ import PrevNextButton from "~/components/quiz-session/PrevNextButton";
 import TeamAnswer from "~/components/quiz-session/TeamAnswer";
 import Teams from "~/components/quiz-session/Teams";
 import { Button } from "~/components/Buttons";
+import { authenticator } from "~/services/auth.server";
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const { quizSessionId } = params;
+  const host = await authenticator.isAuthenticated(request);
+
+  if (!host) {
+    throw new Response("Forbidden", {
+      status: 403,
+    });
+  }
 
   const quizSession = await db.quizSession.findFirst({
     where: {
       id: quizSessionId,
+      hostId: host.id,
     },
     include: {
       Answers: true,

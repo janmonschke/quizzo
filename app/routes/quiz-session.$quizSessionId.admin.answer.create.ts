@@ -2,6 +2,8 @@ import type { ActionFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { db } from "~/db.server";
 
+console.error("TODO: secure create answer");
+
 export const action: ActionFunction = async ({ request, params }) => {
   const { quizSessionId } = params;
   if (!quizSessionId) {

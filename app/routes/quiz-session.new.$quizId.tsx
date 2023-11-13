@@ -9,6 +9,7 @@ import { TextArea } from "~/components/Textarea";
 import { db } from "~/db.server";
 import { distributeTeams } from "~/helpers/distribute_teams";
 import { serializeArrayString } from "~/helpers/string_arrays";
+import { authenticator } from "~/services/auth.server";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { quizId } = params;
@@ -24,6 +25,15 @@ export const action: ActionFunction = async ({ request, params }) => {
   if (!quizId) {
     throw new Error("quizId missing");
   }
+
+  const host = await authenticator.isAuthenticated(request);
+
+  if (!host) {
+    throw new Response("Forbidden", {
+      status: 403,
+    });
+  }
+
   const body = await request.formData();
   const players = splitTextIntoRows(body.get("players")?.toString() ?? "");
   const teamCountR = body.get("teamCount")?.toString();
@@ -32,7 +42,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const session = await db.quizSession.create({
     data: {
       quizId,
-      hostId: "1",
+      hostId: host.id,
     },
   });
 

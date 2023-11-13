@@ -2,6 +2,8 @@ import type { ActionFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { db } from "~/db.server";
 
+console.log("TODO: secure award-points");
+
 export const action: ActionFunction = async ({ request, params }) => {
   const { quizSessionId } = params;
   if (!quizSessionId) {

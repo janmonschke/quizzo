@@ -6,7 +6,7 @@ import QuestionForm from "~/components/quiz/QuestionForm";
 import QuestionList from "~/components/quiz/QuestionList";
 import { H2 } from "~/components/Headlines";
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const { quizId } = params;
   const data = {
     questions: await db.question.findMany({
