@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData, useResolvedPath } from "@remix-run/react";
 import { H1, H2 } from "~/components/Headlines";
 import QuestionComponent from "~/components/Question";
 import { Timer } from "~/components/Timer";
@@ -8,6 +8,7 @@ import { db } from "~/db.server";
 import PrevNextButton from "~/components/quiz-session/PrevNextButton";
 import TeamAnswer from "~/components/quiz-session/TeamAnswer";
 import Teams from "~/components/quiz-session/Teams";
+import { Button } from "~/components/Buttons";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { quizSessionId } = params;
@@ -36,15 +37,18 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     },
   });
 
+  if (!quizSession) {
+    throw new Response("Not Found", {
+      status: 404,
+    });
+  }
+
   return json({ quizSession });
 };
 
 export default function QuizSessionComponent() {
   const { quizSession } = useLoaderData<typeof loader>();
-
-  if (!quizSession) {
-    return <H1>Could not find quiz session</H1>;
-  }
+  const { pathname: deleteSessionPath } = useResolvedPath("delete");
 
   const question = quizSession.quiz.Questions[quizSession.currentPosition];
   const questionsCount = quizSession.quiz.Questions.length - 1;
@@ -52,7 +56,14 @@ export default function QuizSessionComponent() {
 
   return (
     <div className="flex flex-col gap-2">
-      <H1>{quizSession.quiz.name}</H1>
+      <header className="flex flex-row justify-between items-center">
+        <H1>{quizSession.quiz.name}</H1>
+        <Form method="delete" action={deleteSessionPath}>
+          <Button kind="alert" type="submit" name="newPosition">
+            Delete
+          </Button>
+        </Form>
+      </header>
       <Teams teams={quizSession.Teams} sessionId={quizSession.id} />
       <div className="flex justify-between items-center">
         <div className="flex gap-4">

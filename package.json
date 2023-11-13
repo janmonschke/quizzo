@@ -10,7 +10,7 @@
     "build": "remix build",
     "db:setup": "prisma db push && prisma db seed",
     "dev": "remix dev --manual",
-    "start": "remix-serve ./build/index.js",
+    "start": "npx prisma db push && npx remix-serve ./build/index.js",
     "test": "vitest",
     "typecheck": "tsc"
   },

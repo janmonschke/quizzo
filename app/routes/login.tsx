@@ -24,13 +24,13 @@ export default function Login() {
 
 export async function action({ request }: ActionFunctionArgs) {
   return await authenticator.authenticate("user-pass", request, {
-    successRedirect: "/success",
+    successRedirect: "/",
     failureRedirect: "/login",
   });
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
   return await authenticator.isAuthenticated(request, {
-    successRedirect: "/success",
+    successRedirect: "/",
   });
 }

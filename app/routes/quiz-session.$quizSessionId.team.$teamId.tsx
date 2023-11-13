@@ -36,12 +36,17 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     },
   });
 
+  if (!quizSession) {
+    throw new Response("Not Found", {
+      status: 404,
+    });
+  }
+
   return json({ teamId, quizSession });
 };
 
 export default function QuizSessionComponent() {
-  const { quizSession: _session } = useLoaderData<typeof loader>();
-  const quizSession = _session!;
+  const { quizSession } = useLoaderData<typeof loader>();
 
   useEffect(() => {
     setTimeout(() => {
