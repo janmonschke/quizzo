@@ -49,11 +49,15 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 export default function QuizSessionComponent() {
   const { quizSession } = useLoaderData<typeof loader>();
 
-  const time = useEventSource(`/sse/quiz-session/${quizSession.id}`, {
-    event: "time",
+  const position = useEventSource(`/sse/quiz-session/${quizSession.id}`, {
+    event: "updatePosition",
   });
 
-  console.log(time);
+  useEffect(() => {
+    if (position !== null) {
+      window.location.reload();
+    }
+  }, [position]);
 
   const question = quizSession.quiz.Questions[quizSession.currentPosition];
 
