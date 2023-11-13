@@ -29,6 +29,7 @@
     "react-movable": "^3.0.4",
     "remix-auth": "^3.6.0",
     "remix-auth-form": "^1.4.0",
+    "remix-utils": "^7.1.0",
     "xstate": "^4.38.3"
   },
   "devDependencies": {

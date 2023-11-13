@@ -2,6 +2,7 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { useEffect } from "react";
+import { useEventSource } from "remix-utils/sse/react";
 import { H1, H2 } from "~/components/Headlines";
 import TeamQuestion from "~/components/TeamQuestion";
 import { db } from "~/db.server";
@@ -48,11 +49,11 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 export default function QuizSessionComponent() {
   const { quizSession } = useLoaderData<typeof loader>();
 
-  useEffect(() => {
-    setTimeout(() => {
-      window.location.reload();
-    }, 5000);
+  const time = useEventSource(`/sse/quiz-session/${quizSession.id}`, {
+    event: "time",
   });
+
+  console.log(time);
 
   const question = quizSession.quiz.Questions[quizSession.currentPosition];
 
