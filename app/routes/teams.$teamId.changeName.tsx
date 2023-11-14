@@ -3,7 +3,6 @@ import { db } from "../db.server";
 
 export const action: ActionFunction = async ({ request, params }) => {
   const { teamId } = params;
-  console.log(params);
   if (!teamId) {
     throw new Error("teamId missing");
   }

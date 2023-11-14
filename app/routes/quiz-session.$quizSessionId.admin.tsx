@@ -1,6 +1,13 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, useLoaderData, useResolvedPath } from "@remix-run/react";
+import {
+  Form,
+  useLoaderData,
+  useResolvedPath,
+  useRevalidator,
+} from "@remix-run/react";
+import { useEventSource } from "remix-utils/sse/react";
+import { useEffect } from "react";
 import { H1, H2 } from "~/components/Headlines";
 import QuestionComponent from "~/components/Question";
 import { Timer } from "~/components/Timer";
@@ -56,8 +63,29 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 };
 
 export default function QuizSessionComponent() {
+  const revalidator = useRevalidator();
   const { quizSession } = useLoaderData<typeof loader>();
   const { pathname: deleteSessionPath } = useResolvedPath("delete");
+
+  const answered = useEventSource(
+    `/sse/quiz-session/${quizSession.id}/answer`,
+    {
+      event: "answer",
+    }
+  );
+
+  // Need to revalidate when a new answer comes in, otherwise SSE gets out of sync.
+  useEffect(() => {
+    const parsedAnswer = JSON.parse(answered || '{"id":null,"answer":null}');
+    // Checking if we already have the answer, to prevent infinite revalidation
+    const hasAnswer = quizSession.Answers.find(
+      (answer) =>
+        answer.id === parsedAnswer.id && answer.answer === parsedAnswer.answer
+    );
+    if (answered !== null && !hasAnswer && revalidator.state === "idle") {
+      revalidator.revalidate();
+    }
+  }, [revalidator, answered, quizSession]);
 
   const question = quizSession.quiz.Questions[quizSession.currentPosition];
   const questionsCount = quizSession.quiz.Questions.length - 1;

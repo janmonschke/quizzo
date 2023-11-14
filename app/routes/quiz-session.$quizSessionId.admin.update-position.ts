@@ -3,6 +3,7 @@ import { redirect } from "@remix-run/node";
 import { db } from "~/db.server";
 import { authenticator } from "~/services/auth.server";
 import { emitter } from "~/services/emitter.server";
+import * as events from "~/helpers/events";
 
 export const action: ActionFunction = async ({ request, params }) => {
   const host = await authenticator.isAuthenticated(request);
@@ -35,7 +36,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     },
   });
 
-  emitter.emit(`${quizSessionId}/updatePosition`, newPosition);
+  emitter.emit(events.updatePosition(quizSessionId), newPosition);
 
   return redirect(`/quiz-session/${quizSessionId}/admin`);
 };

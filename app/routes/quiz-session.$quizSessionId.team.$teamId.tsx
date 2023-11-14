@@ -1,9 +1,15 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import {
+  useFetcher,
+  useLoaderData,
+  useResolvedPath,
+  useRevalidator,
+} from "@remix-run/react";
 import { useEffect } from "react";
 import { useEventSource } from "remix-utils/sse/react";
 import { H1, H2 } from "~/components/Headlines";
+import { Input } from "~/components/Input";
 import TeamQuestion from "~/components/TeamQuestion";
 import { db } from "~/db.server";
 
@@ -27,6 +33,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
               answerOptions: true,
               questionText: true,
               type: true,
+              id: true,
             },
             orderBy: {
               position: "asc",
@@ -37,7 +44,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     },
   });
 
-  if (!quizSession) {
+  if (!quizSession || !teamId) {
     throw new Response("Not Found", {
       status: 404,
     });
@@ -47,19 +54,35 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 };
 
 export default function QuizSessionComponent() {
-  const { quizSession } = useLoaderData<typeof loader>();
-
-  const position = useEventSource(`/sse/quiz-session/${quizSession.id}`, {
-    event: "updatePosition",
-  });
-
-  useEffect(() => {
-    if (position !== null) {
-      window.location.reload();
-    }
-  }, [position]);
+  const { quizSession, teamId } = useLoaderData<typeof loader>();
+  const revalidator = useRevalidator();
+  const answerFetcher = useFetcher();
 
   const question = quizSession.quiz.Questions[quizSession.currentPosition];
+  const answer = quizSession.Answers.find((a) => a.questionId === question.id);
+
+  const { pathname: createAnswerPath } = useResolvedPath(
+    `answer/${question.id}`
+  );
+
+  const latestPosition = useEventSource(
+    `/sse/quiz-session/${quizSession.id}/update-position`,
+    {
+      event: "updatePosition",
+    }
+  );
+
+  // Need to revalidate when the position changes, otherwise SSE gets out of sync.
+  useEffect(() => {
+    if (
+      latestPosition !== null &&
+      // Only revalidate when we are at a different position
+      quizSession.currentPosition !== parseInt(latestPosition) &&
+      revalidator.state === "idle"
+    ) {
+      revalidator.revalidate();
+    }
+  }, [revalidator, latestPosition, quizSession]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -74,6 +97,22 @@ export default function QuizSessionComponent() {
       </div>
       <div className="my-8">
         <TeamQuestion {...question} />
+      </div>
+      <div className="my-8">
+        <div className="flex items-center gap-4">
+          <answerFetcher.Form method="post" action={createAnswerPath}>
+            <Input type="hidden" name="questionId" value={question.id} />
+            <Input type="hidden" name="teamId" value={teamId} />
+            {answer ? (
+              <>
+                <Input type="hidden" name="answerId" value={answer.id} />
+                <Input type="text" defaultValue={answer.answer} name="answer" />
+              </>
+            ) : (
+              <Input type="text" name="answer" placeholder="Answer" required />
+            )}
+          </answerFetcher.Form>
+        </div>
       </div>
     </div>
   );
