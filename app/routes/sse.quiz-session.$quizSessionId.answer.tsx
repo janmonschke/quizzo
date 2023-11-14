@@ -16,7 +16,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     emitter.on(events.updateAnswer(quizSessionId), onUpdate);
 
     return () => {
-      emitter.off(events.updatePosition(quizSessionId), onUpdate);
+      emitter.off(events.updateAnswer(quizSessionId), onUpdate);
     };
   });
 }
