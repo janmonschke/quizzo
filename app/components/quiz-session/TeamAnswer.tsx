@@ -28,7 +28,12 @@ export default function TeamAnswer({
         {answer ? (
           <>
             <Input type="hidden" name="answerId" value={answer.id} />
-            <Input type="text" defaultValue={answer.answer} name="answer" />
+            <Input
+              type="text"
+              key={answer.answer}
+              defaultValue={answer.answer}
+              name="answer"
+            />
           </>
         ) : (
           <Input type="text" name="answer" placeholder="Answer" required />

@@ -106,7 +106,12 @@ export default function QuizSessionComponent() {
             {answer ? (
               <>
                 <Input type="hidden" name="answerId" value={answer.id} />
-                <Input type="text" defaultValue={answer.answer} name="answer" />
+                <Input
+                  type="text"
+                  key={answer.updatedAt}
+                  defaultValue={answer.answer}
+                  name="answer"
+                />
               </>
             ) : (
               <Input type="text" name="answer" placeholder="Answer" required />
