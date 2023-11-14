@@ -9,7 +9,7 @@ export default function Login() {
     <>
       <h1>Login</h1>
       <Form method="post">
-        <Input type="text" name="name" required />
+        <Input type="text" name="name" required autoFocus />
         <Input
           type="password"
           name="password"

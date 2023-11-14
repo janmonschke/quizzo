@@ -10,12 +10,12 @@ import { db } from "~/db.server";
 import { generatePasswordHash } from "~/helpers/password.server";
 import { authenticator } from "~/services/auth.server";
 
-export default function Login() {
+export default function Register() {
   return (
     <>
       <h1>Register</h1>
       <Form method="post">
-        <Input type="text" name="name" required />
+        <Input type="text" name="name" required autoFocus />
         <Input
           type="password"
           name="password"
