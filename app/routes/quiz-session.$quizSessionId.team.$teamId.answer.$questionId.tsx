@@ -3,7 +3,7 @@ import { json } from "@remix-run/node";
 import { db } from "~/db.server";
 import { emitter } from "~/services/emitter.server";
 import * as events from "~/helpers/events";
-import { Answer } from "@prisma/client";
+import type { Answer } from "@prisma/client";
 
 console.error("TODO: secure create answer");
 
