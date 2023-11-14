@@ -28,9 +28,3 @@ export async function action({ request }: ActionFunctionArgs) {
     failureRedirect: "/login",
   });
 }
-
-export async function loader({ request }: LoaderFunctionArgs) {
-  return await authenticator.isAuthenticated(request, {
-    successRedirect: "/",
-  });
-}
