@@ -46,3 +46,9 @@ export async function action({ request }: ActionFunctionArgs) {
   });
   return redirect("/login");
 }
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  return await authenticator.isAuthenticated(request, {
+    successRedirect: "/",
+  });
+}
