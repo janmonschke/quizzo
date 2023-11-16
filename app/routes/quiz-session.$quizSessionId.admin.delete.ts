@@ -1,20 +1,16 @@
 import { redirect, type ActionFunctionArgs } from "@remix-run/node";
 import { db } from "~/db.server";
-import { authenticator } from "~/services/auth.server";
+import { ensureHasAccessToQuizSession } from "~/helpers/authorization";
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
-  const { quizSessionId } = params;
-  const host = await authenticator.isAuthenticated(request);
-
-  if (!host) {
-    throw new Response("Forbidden", {
-      status: 403,
-    });
-  }
+  const { quizSession, host } = await ensureHasAccessToQuizSession(
+    params.quizSessionId,
+    request
+  );
 
   await db.quizSession.delete({
     where: {
-      id: quizSessionId,
+      id: quizSession.id,
       hostId: host.id,
     },
   });

@@ -1,14 +1,12 @@
 import type { ActionFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { db } from "~/db.server";
-
-console.log("TODO: secure award-points");
+import { ensureHasAccessToQuizSession } from "~/helpers/authorization";
 
 export const action: ActionFunction = async ({ request, params }) => {
   const { quizSessionId } = params;
-  if (!quizSessionId) {
-    throw new Error("quizSessionId missing");
-  }
+  await ensureHasAccessToQuizSession(quizSessionId, request);
+
   const body = await request.formData();
   const answerId = body.get("answerId")?.toString();
   const teamId = body.get("teamId")?.toString();

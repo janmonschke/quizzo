@@ -1,42 +1,12 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import { db } from "~/db.server";
 import { H1 } from "~/components/Headlines";
 import { Button } from "~/components/Buttons";
-import { authenticator } from "~/services/auth.server";
+import { ensureHasAccessToQuiz } from "~/helpers/authorization";
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  const { quizId } = params;
-
-  const host = await authenticator.isAuthenticated(request);
-
-  if (!host) {
-    throw new Response("Forbidden", {
-      status: 403,
-    });
-  }
-
-  const quiz = await db.quiz.findFirst({
-    where: {
-      id: quizId,
-      hostId: host.id,
-    },
-    include: {
-      _count: {
-        select: {
-          Questions: true,
-        },
-      },
-    },
-  });
-
-  if (!quiz) {
-    throw new Response("Not Found", {
-      status: 404,
-    });
-  }
-
+  const { quiz } = await ensureHasAccessToQuiz(params.quizId, request);
   return json({ quiz });
 };
 
@@ -52,8 +22,6 @@ export default function Index() {
           New session
         </Button>
       </div>
-
-      <p>This quiz has {quiz._count.Questions} question(s)</p>
 
       <Outlet />
     </div>

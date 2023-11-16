@@ -5,10 +5,9 @@ import { emitter } from "~/services/emitter.server";
 import * as events from "~/helpers/events";
 import type { Answer } from "@prisma/client";
 
-console.error("TODO: secure create answer");
-
 export const action: ActionFunction = async ({ request, params }) => {
   const { quizSessionId, teamId, questionId } = params;
+
   if (!quizSessionId || !teamId || !questionId) {
     throw new Response("Not Found", { status: 404 });
   }

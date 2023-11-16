@@ -1,21 +1,19 @@
 import type { ActionFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { db } from "~/db.server";
-
-console.error("TODO: secure create answer");
+import { ensureHasAccessToQuizSession } from "~/helpers/authorization";
 
 export const action: ActionFunction = async ({ request, params }) => {
   const { quizSessionId } = params;
-  if (!quizSessionId) {
-    throw new Error("quizSessionId missing");
-  }
+  await ensureHasAccessToQuizSession(quizSessionId, request);
+
   const body = await request.formData();
   const answer = body.get("answer")?.toString();
   const answerId = body.get("answerId")?.toString();
   const questionId = body.get("questionId")?.toString();
   const teamId = body.get("teamId")?.toString();
 
-  if (!answer || !questionId || !teamId) {
+  if (!quizSessionId || !answer || !questionId || !teamId) {
     throw new Error("Not all required attributes were passed");
   }
 

@@ -16,17 +16,11 @@ import PrevNextButton from "~/components/quiz-session/PrevNextButton";
 import TeamAnswer from "~/components/quiz-session/TeamAnswer";
 import Teams from "~/components/quiz-session/Teams";
 import { Button } from "~/components/Buttons";
-import { authenticator } from "~/services/auth.server";
+import { ensureHasAccessToQuizSession } from "~/helpers/authorization";
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const { quizSessionId } = params;
-  const host = await authenticator.isAuthenticated(request);
-
-  if (!host) {
-    throw new Response("Forbidden", {
-      status: 403,
-    });
-  }
+  const { host } = await ensureHasAccessToQuizSession(quizSessionId, request);
 
   const quizSession = await db.quizSession.findFirst({
     where: {
@@ -54,9 +48,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   });
 
   if (!quizSession) {
-    throw new Response("Not Found", {
-      status: 404,
-    });
+    throw new Response("Not Found", { status: 404 });
   }
 
   return json({ quizSession });
@@ -86,6 +78,22 @@ export default function QuizSessionComponent() {
       revalidator.revalidate();
     }
   }, [revalidator, answered, quizSession]);
+
+  const updatedName = useEventSource(
+    `/sse/quiz-session/${quizSession.id}/update-name`,
+    {
+      event: "updateName",
+    }
+  );
+
+  // Need to revalidate when a new name comes in, otherwise SSE gets out of sync.
+  useEffect(() => {
+    // Checking if we already have the name, to prevent infinite revalidation
+    const hasName = quizSession.Teams.find((team) => team.name === updatedName);
+    if (updatedName !== null && !hasName && revalidator.state === "idle") {
+      revalidator.revalidate();
+    }
+  }, [revalidator, updatedName, quizSession]);
 
   const question = quizSession.quiz.Questions[quizSession.currentPosition];
   const questionsCount = quizSession.quiz.Questions.length - 1;
@@ -136,7 +144,7 @@ export default function QuizSessionComponent() {
           team.AwardedPoints.find((awp) => answer.id === awp.answerId);
         return (
           <TeamAnswer
-            key={`${team.id}-${question.id}`}
+            key={`${team.id}-${team.name}-${question.id}`}
             answer={answer}
             awardedPoints={awardedPoints}
             team={team}

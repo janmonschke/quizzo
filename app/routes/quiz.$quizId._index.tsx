@@ -5,9 +5,12 @@ import { db } from "~/db.server";
 import QuestionForm from "~/components/quiz/QuestionForm";
 import QuestionList from "~/components/quiz/QuestionList";
 import { H2 } from "~/components/Headlines";
+import { ensureHasAccessToQuiz } from "~/helpers/authorization";
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const { quizId } = params;
+  await ensureHasAccessToQuiz(params.quizId, request);
+
   const data = {
     questions: await db.question.findMany({
       where: {
@@ -23,6 +26,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const { quizId } = params;
+  await ensureHasAccessToQuiz(params.quizId, request);
   const body = await request.formData();
 
   if (body.get("_method") === "delete") {

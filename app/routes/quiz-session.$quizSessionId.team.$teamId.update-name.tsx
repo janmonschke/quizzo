@@ -1,10 +1,12 @@
 import type { ActionFunction } from "@remix-run/node";
 import { db } from "../db.server";
+import { emitter } from "~/services/emitter.server";
+import * as events from "~/helpers/events";
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const { teamId } = params;
-  if (!teamId) {
-    throw new Error("teamId missing");
+  const { teamId, quizSessionId } = params;
+  if (!teamId || !quizSessionId) {
+    throw new Error("Paraemters missind");
   }
   const body = await request.formData();
 
@@ -22,6 +24,8 @@ export const action: ActionFunction = async ({ request, params }) => {
       name: newName,
     },
   });
+
+  emitter.emit(events.updateName(quizSessionId), newName);
 
   return null;
 };

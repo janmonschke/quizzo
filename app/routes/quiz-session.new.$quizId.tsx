@@ -7,15 +7,14 @@ import { H1 } from "~/components/Headlines";
 import { Input } from "~/components/Input";
 import { TextArea } from "~/components/Textarea";
 import { db } from "~/db.server";
+import { ensureHasAccessToQuiz } from "~/helpers/authorization";
 import { distributeTeams } from "~/helpers/distribute_teams";
 import { serializeArrayString } from "~/helpers/string_arrays";
 import { authenticator } from "~/services/auth.server";
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const { quizId } = params;
-  if (!quizId) {
-    throw new Error("quizId missing");
-  }
+  await ensureHasAccessToQuiz(quizId, request);
 
   return json({ quizId });
 };

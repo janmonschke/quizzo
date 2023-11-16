@@ -21,6 +21,11 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
       id: quizSessionId,
     },
     include: {
+      Teams: {
+        where: {
+          id: teamId,
+        },
+      },
       Answers: {
         where: {
           teamId,
@@ -44,19 +49,22 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     },
   });
 
-  if (!quizSession || !teamId) {
+  const team = quizSession?.Teams[0];
+
+  if (!quizSession || !team || !teamId) {
     throw new Response("Not Found", {
       status: 404,
     });
   }
 
-  return json({ teamId, quizSession });
+  return json({ teamId, team, quizSession });
 };
 
 export default function QuizSessionComponent() {
-  const { quizSession, teamId } = useLoaderData<typeof loader>();
+  const { quizSession, team } = useLoaderData<typeof loader>();
   const revalidator = useRevalidator();
   const answerFetcher = useFetcher();
+  const nameChangeFetcher = useFetcher();
 
   const question = quizSession.quiz.Questions[quizSession.currentPosition];
   const answer = quizSession.Answers.find((a) => a.questionId === question.id);
@@ -64,6 +72,7 @@ export default function QuizSessionComponent() {
   const { pathname: createAnswerPath } = useResolvedPath(
     `answer/${question.id}`
   );
+  const { pathname: teamNameUpdatePath } = useResolvedPath(`update-name`);
 
   const latestPosition = useEventSource(
     `/sse/quiz-session/${quizSession.id}/update-position`,
@@ -87,14 +96,20 @@ export default function QuizSessionComponent() {
   return (
     <div className="flex flex-col gap-2">
       <H1>{quizSession.quiz.name}</H1>
-      <div className="flex justify-between items-center">
-        <div className="flex gap-4">
-          <H2>
-            Question {quizSession.currentPosition + 1} of{" "}
-            {quizSession.quiz.Questions.length}
-          </H2>
-        </div>
-      </div>
+      <aside>
+        <nameChangeFetcher.Form method="post" action={teamNameUpdatePath}>
+          <Input
+            name="name"
+            key={team.name}
+            defaultValue={team.name}
+            className="w-40"
+          />
+        </nameChangeFetcher.Form>
+      </aside>
+      <H2>
+        Question {quizSession.currentPosition + 1} of{" "}
+        {quizSession.quiz.Questions.length}
+      </H2>
       <div className="my-8">
         <TeamQuestion {...question} />
       </div>
@@ -102,7 +117,7 @@ export default function QuizSessionComponent() {
         <div className="flex items-center gap-4">
           <answerFetcher.Form method="post" action={createAnswerPath}>
             <Input type="hidden" name="questionId" value={question.id} />
-            <Input type="hidden" name="teamId" value={teamId} />
+            <Input type="hidden" name="teamId" value={team.id} />
             {answer ? (
               <>
                 <Input type="hidden" name="answerId" value={answer.id} />

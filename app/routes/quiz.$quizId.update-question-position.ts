@@ -1,15 +1,9 @@
 import type { ActionFunction } from "@remix-run/node";
 import { db } from "~/db.server";
-import { authenticator } from "~/services/auth.server";
+import { ensureHasAccessToQuiz } from "~/helpers/authorization";
 
-export const action: ActionFunction = async ({ request }) => {
-  const host = await authenticator.isAuthenticated(request);
-
-  if (!host) {
-    throw new Response("Forbidden", {
-      status: 403,
-    });
-  }
+export const action: ActionFunction = async ({ params, request }) => {
+  await ensureHasAccessToQuiz(params.quizId, request);
 
   const data = await request.formData();
   const questionId = data.get("questionId");
@@ -20,13 +14,10 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   const question = await db.question.findFirst({
-    where: { id: questionId },
-    include: {
-      quiz: true,
-    },
+    where: { id: questionId, quizId: params.quizId },
   });
 
-  if (!question || question.quiz.hostId !== host.id) {
+  if (!question) {
     throw new Response("Not Found", {
       status: 404,
     });

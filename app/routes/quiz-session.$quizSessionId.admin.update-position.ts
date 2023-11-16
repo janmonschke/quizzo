@@ -1,25 +1,18 @@
 import type { ActionFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { db } from "~/db.server";
-import { authenticator } from "~/services/auth.server";
 import { emitter } from "~/services/emitter.server";
 import * as events from "~/helpers/events";
+import { ensureHasAccessToQuizSession } from "~/helpers/authorization";
 
 export const action: ActionFunction = async ({ request, params }) => {
-  const host = await authenticator.isAuthenticated(request);
-
-  if (!host) {
-    throw new Response("Forbidden", {
-      status: 403,
-    });
-  }
-
   const { quizSessionId } = params;
-  if (!quizSessionId) {
-    throw new Error("quizSessionId missing");
-  }
-  const body = await request.formData();
+  const { host, quizSession } = await ensureHasAccessToQuizSession(
+    quizSessionId,
+    request
+  );
 
+  const body = await request.formData();
   const newPosition = body.get("newPosition")?.toString();
 
   if (!newPosition) {
@@ -28,7 +21,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   await db.quizSession.update({
     where: {
-      id: quizSessionId,
+      id: quizSession.id,
       hostId: host.id,
     },
     data: {
@@ -36,7 +29,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     },
   });
 
-  emitter.emit(events.updatePosition(quizSessionId), newPosition);
+  emitter.emit(events.updatePosition(quizSession.id), newPosition);
 
-  return redirect(`/quiz-session/${quizSessionId}/admin`);
+  return redirect(`/quiz-session/${quizSession.id}/admin`);
 };
