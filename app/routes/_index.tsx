@@ -6,36 +6,50 @@ import { authenticator } from "~/services/auth.server";
 import { H1, H2 } from "~/components/Headlines";
 import { Link } from "~/components/Link";
 import { Button } from "~/components/Buttons";
+import { getPreferredLanguage } from "~/helpers/language.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const host = await authenticator.isAuthenticated(request);
+  const preferredLanguage = getPreferredLanguage(
+    request.headers.get("accept-language")
+  );
 
   if (!host) {
-    return json({ host: null });
+    return json({ host: null, preferredLanguage });
   }
 
   const data = {
+    preferredLanguage,
     host: await db.host.findUnique({
       where: {
         name: host.name,
       },
       include: {
         Quizzes: true,
-        QuizSessions: true,
+        QuizSessions: {
+          include: {
+            quiz: true,
+          },
+        },
       },
     }),
   };
+
   return json(data);
 };
 
 export default function Index() {
-  const { host } = useLoaderData<typeof loader>();
+  const { host, preferredLanguage } = useLoaderData<typeof loader>();
 
   return (
     <div>
       <H1>Welcome to Quizzo</H1>
 
-      {!host ? <AnonymousIndex /> : <LoggedInIndex host={host} />}
+      {!host ? (
+        <AnonymousIndex />
+      ) : (
+        <LoggedInIndex host={host} preferredLanguage={preferredLanguage} />
+      )}
     </div>
   );
 }
@@ -54,14 +68,17 @@ function AnonymousIndex() {
 }
 function LoggedInIndex({
   host,
+  preferredLanguage,
 }: {
   host: NonNullable<ReturnType<typeof useLoaderData<typeof loader>>["host"]>;
+  preferredLanguage: string;
 }) {
+  console.log(host.QuizSessions.length);
   return (
     <>
       {host.name}
 
-      {host.Quizzes && (
+      {host.Quizzes.length && (
         <>
           <H2>Quizzes</H2>
           <Button to="/quiz/new" as="link">
@@ -77,19 +94,24 @@ function LoggedInIndex({
         </>
       )}
 
-      {host.QuizSessions && (
-        <>
-          <H2>Quiz Sessions</H2>
-          <ul>
-            {host.QuizSessions.map((session) => (
-              <li key={session.id}>
-                <Link to={`/quiz-session/${session.id}/admin`}>
-                  {session.id}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </>
+      <H2>Quiz Sessions</H2>
+      {host.QuizSessions.length ? (
+        <ul>
+          {host.QuizSessions.map((session) => (
+            <li key={session.id}>
+              <Link to={`/quiz-session/${session.id}/admin`}>
+                {new Date(session.createdAt).toLocaleDateString(
+                  preferredLanguage
+                )}
+                : {session.quiz.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>
+          No quiz sessions so far. Go to a quiz page to start a new session.
+        </p>
       )}
     </>
   );

@@ -7,6 +7,7 @@ import {
   useRevalidator,
 } from "@remix-run/react";
 import { useEventSource } from "remix-utils/sse/react";
+import type { FormEvent } from "react";
 import { useEffect } from "react";
 import { H1, H2 } from "~/components/Headlines";
 import QuestionComponent from "~/components/Question";
@@ -103,7 +104,11 @@ export default function QuizSessionComponent() {
     <div className="flex flex-col gap-2">
       <header className="flex flex-row justify-between items-center">
         <H1>{quizSession.quiz.name}</H1>
-        <Form method="delete" action={deleteSessionPath}>
+        <Form
+          method="delete"
+          action={deleteSessionPath}
+          onSubmit={confirmDeletion}
+        >
           <Button kind="alert" type="submit" name="newPosition">
             Delete
           </Button>
@@ -156,4 +161,10 @@ export default function QuizSessionComponent() {
       </table>
     </div>
   );
+}
+
+function confirmDeletion(event: FormEvent<HTMLFormElement>) {
+  if (!confirm("Are you sure you want to delete the session?")) {
+    event.preventDefault();
+  }
 }

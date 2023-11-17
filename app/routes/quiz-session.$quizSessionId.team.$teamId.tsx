@@ -69,8 +69,6 @@ export default function QuizSessionComponent() {
   const nameChangeFetcher = useFetcher();
 
   const isSubmitting = answerFetcher.state === "submitting";
-  const isRevalidating = revalidator.state === "loading";
-  const hasSthGoingOn = isSubmitting || isRevalidating;
 
   const question = quizSession.quiz.Questions[quizSession.currentPosition];
   const answer = quizSession.Answers.find((a) => a.questionId === question.id);
@@ -100,14 +98,7 @@ export default function QuizSessionComponent() {
   }, [revalidator, latestPosition, quizSession]);
 
   return (
-    <div
-      className={cx(
-        "flex",
-        "flex-col",
-        "gap-2",
-        hasSthGoingOn && "animate-pulse"
-      )}
-    >
+    <div className={cx("flex", "flex-col", "gap-2")}>
       <H1>{quizSession.quiz.name}</H1>
       <aside className="flex gap-3 mb-4">
         <H3>Team name:</H3>
