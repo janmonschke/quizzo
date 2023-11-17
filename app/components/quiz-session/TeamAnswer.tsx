@@ -17,59 +17,69 @@ export default function TeamAnswer({
   const { pathname: awardPointsPath } = useResolvedPath("answer/award-points");
 
   return (
-    <div className="flex items-center gap-4">
-      {team.name}
-      <Form method="post" action={createAnswerPath}>
-        <Input type="hidden" name="questionId" value={question.id} />
-        <Input type="hidden" name="teamId" value={team.id} />
-        {answer ? (
-          <>
-            <Input type="hidden" name="answerId" value={answer.id} />
-            <Input
-              type="text"
-              key={answer.answer}
-              defaultValue={answer.answer}
-              name="answer"
-            />
-          </>
-        ) : (
-          <Input type="text" name="answer" placeholder="Answer" required />
-        )}
-      </Form>
-
-      {answer && (
-        <Form method="post" action={awardPointsPath}>
+    <tr className="gap-4">
+      <td>{team.name}</td>
+      <td className="px-4">
+        <Form method="post" action={createAnswerPath}>
           <Input type="hidden" name="questionId" value={question.id} />
           <Input type="hidden" name="teamId" value={team.id} />
-          <Input type="hidden" name="answerId" value={answer.id} />
-          {awardedPoints ? (
+          {answer ? (
             <>
+              <Input type="hidden" name="answerId" value={answer.id} />
               <Input
-                type="hidden"
-                name="awardedPointsId"
-                value={awardedPoints.id}
+                type="text"
+                key={answer.answer}
+                defaultValue={answer.answer}
+                name="answer"
+                className="w-full"
               />
-              <Input
-                type="number"
-                name="points"
-                defaultValue={awardedPoints.points}
-                step="0.1"
-                required
-              />{" "}
-              ☑️
             </>
           ) : (
             <Input
-              type="number"
-              name="points"
-              placeholder="Points"
-              defaultValue={question.points}
-              step="0.1"
+              type="text"
+              name="answer"
+              placeholder="Answer"
               required
+              className="w-full"
             />
           )}
         </Form>
-      )}
-    </div>
+      </td>
+      <td>
+        {answer && (
+          <Form method="post" action={awardPointsPath}>
+            <Input type="hidden" name="questionId" value={question.id} />
+            <Input type="hidden" name="teamId" value={team.id} />
+            <Input type="hidden" name="answerId" value={answer.id} />
+            {awardedPoints ? (
+              <>
+                <Input
+                  type="hidden"
+                  name="awardedPointsId"
+                  value={awardedPoints.id}
+                />
+                <Input
+                  type="number"
+                  name="points"
+                  defaultValue={awardedPoints.points}
+                  step="0.1"
+                  required
+                />{" "}
+                ☑️
+              </>
+            ) : (
+              <Input
+                type="number"
+                name="points"
+                placeholder="Points"
+                defaultValue={question.points}
+                step="0.1"
+                required
+              />
+            )}
+          </Form>
+        )}
+      </td>
+    </tr>
   );
 }

@@ -134,24 +134,26 @@ export default function QuizSessionComponent() {
       <div className="my-8">
         <QuestionComponent {...question} />
       </div>
-      {quizSession.Teams.map((team) => {
-        const answer = quizSession.Answers.find(
-          (answer) =>
-            answer.teamId === team.id && answer.questionId == question.id
-        );
-        const awardedPoints =
-          answer &&
-          team.AwardedPoints.find((awp) => answer.id === awp.answerId);
-        return (
-          <TeamAnswer
-            key={`${team.id}-${team.name}-${question.id}`}
-            answer={answer}
-            awardedPoints={awardedPoints}
-            team={team}
-            question={question}
-          />
-        );
-      })}
+      <table>
+        {quizSession.Teams.map((team) => {
+          const answer = quizSession.Answers.find(
+            (answer) =>
+              answer.teamId === team.id && answer.questionId == question.id
+          );
+          const awardedPoints =
+            answer &&
+            team.AwardedPoints.find((awp) => answer.id === awp.answerId);
+          return (
+            <TeamAnswer
+              key={`${team.id}-${team.name}-${question.id}`}
+              answer={answer}
+              awardedPoints={awardedPoints}
+              team={team}
+              question={question}
+            />
+          );
+        })}
+      </table>
     </div>
   );
 }

@@ -8,6 +8,7 @@ import {
 } from "@remix-run/react";
 import { useEffect } from "react";
 import { useEventSource } from "remix-utils/sse/react";
+import cx from "classnames";
 import { H1, H2 } from "~/components/Headlines";
 import { Input } from "~/components/Input";
 import TeamQuestion from "~/components/TeamQuestion";
@@ -66,6 +67,10 @@ export default function QuizSessionComponent() {
   const answerFetcher = useFetcher();
   const nameChangeFetcher = useFetcher();
 
+  const isSubmitting = answerFetcher.state === "submitting";
+  const isRevalidating = revalidator.state === "loading";
+  const hasSthGoingOn = isSubmitting || isRevalidating;
+
   const question = quizSession.quiz.Questions[quizSession.currentPosition];
   const answer = quizSession.Answers.find((a) => a.questionId === question.id);
 
@@ -94,16 +99,31 @@ export default function QuizSessionComponent() {
   }, [revalidator, latestPosition, quizSession]);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div
+      className={cx(
+        "flex",
+        "flex-col",
+        "gap-2",
+        hasSthGoingOn && "animate-pulse"
+      )}
+    >
       <H1>{quizSession.quiz.name}</H1>
       <aside>
-        <nameChangeFetcher.Form method="post" action={teamNameUpdatePath}>
+        <nameChangeFetcher.Form
+          method="post"
+          action={teamNameUpdatePath}
+          className="flex items-center gap-2"
+        >
           <Input
             name="name"
             key={team.name}
             defaultValue={team.name}
             className="w-40"
           />
+          {isSetOrSubmitting(
+            team.name,
+            nameChangeFetcher.state === "submitting"
+          )}
         </nameChangeFetcher.Form>
       </aside>
       <H2>
@@ -114,26 +134,38 @@ export default function QuizSessionComponent() {
         <TeamQuestion {...question} />
       </div>
       <div className="my-8">
-        <div className="flex items-center gap-4">
-          <answerFetcher.Form method="post" action={createAnswerPath}>
-            <Input type="hidden" name="questionId" value={question.id} />
-            <Input type="hidden" name="teamId" value={team.id} />
-            {answer ? (
-              <>
-                <Input type="hidden" name="answerId" value={answer.id} />
-                <Input
-                  type="text"
-                  key={answer.updatedAt}
-                  defaultValue={answer.answer}
-                  name="answer"
-                />
-              </>
-            ) : (
-              <Input type="text" name="answer" placeholder="Answer" required />
-            )}
-          </answerFetcher.Form>
-        </div>
+        <answerFetcher.Form
+          key={question.id}
+          method="post"
+          action={createAnswerPath}
+          className="flex items-center gap-2"
+        >
+          <Input type="hidden" name="questionId" value={question.id} />
+          <Input type="hidden" name="teamId" value={team.id} />
+          {answer ? (
+            <Input type="hidden" name="answerId" value={answer.id} />
+          ) : null}
+
+          <Input
+            type="text"
+            key={answer?.updatedAt}
+            name="answer"
+            defaultValue={answer?.answer}
+            placeholder="Answer"
+            required
+          />
+
+          {isSetOrSubmitting(answer, isSubmitting)}
+        </answerFetcher.Form>
       </div>
     </div>
   );
+}
+
+function isSetOrSubmitting<T>(thing: T | undefined, isSubmitting: boolean) {
+  return isSubmitting ? (
+    <span className="animate-spin">↻</span>
+  ) : thing ? (
+    "☑️"
+  ) : null;
 }
