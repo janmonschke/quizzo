@@ -8,3 +8,7 @@ export const H1: React.FC<PropsWithChildren> = ({ children }) => (
 export const H2: React.FC<PropsWithChildren> = ({ children }) => (
   <h1 className="text-xl my-2 font-semibold">{children}</h1>
 );
+
+export const H3: React.FC<PropsWithChildren> = ({ children }) => (
+  <h1 className="text-l my-2 font-semibold">{children}</h1>
+);

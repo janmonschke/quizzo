@@ -9,10 +9,11 @@ import {
 import { useEffect } from "react";
 import { useEventSource } from "remix-utils/sse/react";
 import cx from "classnames";
-import { H1, H2 } from "~/components/Headlines";
+import { H1, H2, H3 } from "~/components/Headlines";
 import { Input } from "~/components/Input";
 import TeamQuestion from "~/components/TeamQuestion";
 import { db } from "~/db.server";
+import { Button } from "~/components/Buttons";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { quizSessionId, teamId } = params;
@@ -108,7 +109,8 @@ export default function QuizSessionComponent() {
       )}
     >
       <H1>{quizSession.quiz.name}</H1>
-      <aside>
+      <aside className="flex gap-3 mb-4">
+        <H3>Team name:</H3>
         <nameChangeFetcher.Form
           method="post"
           action={teamNameUpdatePath}
@@ -119,6 +121,7 @@ export default function QuizSessionComponent() {
             key={team.name}
             defaultValue={team.name}
             className="w-40"
+            disabled={nameChangeFetcher.state === "submitting"}
           />
           {isSetOrSubmitting(
             team.name,
@@ -130,10 +133,10 @@ export default function QuizSessionComponent() {
         Question {quizSession.currentPosition + 1} of{" "}
         {quizSession.quiz.Questions.length}
       </H2>
-      <div className="my-8">
+      <div className="my-6">
         <TeamQuestion {...question} />
       </div>
-      <div className="my-8">
+      <div>
         <answerFetcher.Form
           key={question.id}
           method="post"
@@ -151,9 +154,13 @@ export default function QuizSessionComponent() {
             key={answer?.updatedAt}
             name="answer"
             defaultValue={answer?.answer}
+            disabled={isSubmitting}
             placeholder="Answer"
             required
           />
+          <Button as="button" type="submit" disabled={isSubmitting}>
+            Answer
+          </Button>
 
           {isSetOrSubmitting(answer, isSubmitting)}
         </answerFetcher.Form>
@@ -166,6 +173,6 @@ function isSetOrSubmitting<T>(thing: T | undefined, isSubmitting: boolean) {
   return isSubmitting ? (
     <span className="animate-spin">↻</span>
   ) : thing ? (
-    "☑️"
+    "👍"
   ) : null;
 }

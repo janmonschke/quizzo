@@ -47,36 +47,33 @@ export default function TeamAnswer({
       </td>
       <td>
         {answer && (
-          <Form method="post" action={awardPointsPath}>
+          <Form
+            method="post"
+            action={awardPointsPath}
+            className="flex items-center gap-2"
+          >
             <Input type="hidden" name="questionId" value={question.id} />
             <Input type="hidden" name="teamId" value={team.id} />
             <Input type="hidden" name="answerId" value={answer.id} />
             {awardedPoints ? (
-              <>
-                <Input
-                  type="hidden"
-                  name="awardedPointsId"
-                  value={awardedPoints.id}
-                />
-                <Input
-                  type="number"
-                  name="points"
-                  defaultValue={awardedPoints.points}
-                  step="0.1"
-                  required
-                />{" "}
-                ☑️
-              </>
-            ) : (
               <Input
-                type="number"
-                name="points"
-                placeholder="Points"
-                defaultValue={question.points}
-                step="0.1"
-                required
+                type="hidden"
+                name="awardedPointsId"
+                value={awardedPoints.id}
               />
-            )}
+            ) : null}
+            <Input
+              key={awardedPoints?.id || question.id}
+              type="number"
+              name="points"
+              placeholder="Points"
+              defaultValue={
+                awardedPoints ? awardedPoints.points : question.points
+              }
+              step="1"
+              required
+            />
+            {awardedPoints ? <span>👍</span> : null}
           </Form>
         )}
       </td>

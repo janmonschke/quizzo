@@ -64,8 +64,15 @@ function TeamComponent({
             <li key={member}>{member}</li>
           ))}
         </ul>
-        <a href={`/quiz-session/${sessionId}/team/${team.id}`}>Team link</a>
       </details>
+      <a
+        href={`/quiz-session/${sessionId}/team/${team.id}`}
+        className="mt-2 inline-block underline-offset-4 underline hover:text-blue-400"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Team link
+      </a>
     </Card>
   );
 }
