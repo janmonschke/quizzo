@@ -18,6 +18,7 @@ import TeamAnswer from "~/components/quiz-session/TeamAnswer";
 import Teams from "~/components/quiz-session/Teams";
 import { Button } from "~/components/Buttons";
 import { ensureHasAccessToQuizSession } from "~/helpers/authorization";
+import { Navigation } from "~/components/navigation";
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const { quizSessionId } = params;
@@ -102,6 +103,7 @@ export default function QuizSessionComponent() {
 
   return (
     <div className="flex flex-col gap-2">
+      <Navigation />
       <header className="flex flex-row justify-between items-center">
         <H1>{quizSession.quiz.name}</H1>
         <Form
