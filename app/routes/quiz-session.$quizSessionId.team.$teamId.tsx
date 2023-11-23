@@ -171,6 +171,7 @@ export default function QuizSessionComponent() {
                         onChange={submitAnswer}
                       >
                         <input
+                          key={answerOption + isChecked + "input"}
                           type="radio"
                           name="answer"
                           value={answerOption}
