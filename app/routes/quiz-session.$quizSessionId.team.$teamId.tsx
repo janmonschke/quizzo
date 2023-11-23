@@ -6,7 +6,7 @@ import {
   useResolvedPath,
   useRevalidator,
 } from "@remix-run/react";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useEventSource } from "remix-utils/sse/react";
 import cx from "classnames";
 import { H1, H2, H3 } from "~/components/Headlines";
@@ -14,6 +14,8 @@ import { Input } from "~/components/Input";
 import TeamQuestion from "~/components/TeamQuestion";
 import { db } from "~/db.server";
 import { Button } from "~/components/Buttons";
+import { QuestionType } from "~/types";
+import { parseArrayString } from "~/helpers/string_arrays";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { quizSessionId, teamId } = params;
@@ -97,6 +99,15 @@ export default function QuizSessionComponent() {
     }
   }, [revalidator, latestPosition, quizSession]);
 
+  const submitAnswer = useCallback(
+    (event: React.FormEvent<HTMLLabelElement>) => {
+      answerFetcher.submit(event.currentTarget.form, {
+        method: "POST",
+      });
+    },
+    [answerFetcher]
+  );
+
   return (
     <div className={cx("flex", "flex-col", "gap-2")}>
       <H1>{quizSession.quiz.name}</H1>
@@ -140,18 +151,56 @@ export default function QuizSessionComponent() {
             <Input type="hidden" name="answerId" value={answer.id} />
           ) : null}
 
-          <Input
-            type="text"
-            key={answer?.updatedAt}
-            name="answer"
-            defaultValue={answer?.answer}
-            disabled={isSubmitting}
-            placeholder="Answer"
-            required
-          />
-          <Button as="button" type="submit" disabled={isSubmitting}>
-            Answer
-          </Button>
+          {question.type === QuestionType.multipleChoice &&
+            question.answerOptions && (
+              <div key={answer?.updatedAt} className="flex flex-col gap-4">
+                {parseArrayString(question.answerOptions).map(
+                  (answerOption) => {
+                    const isChecked = answer?.answer === answerOption;
+                    return (
+                      <label
+                        key={answerOption + isChecked}
+                        className={cx(
+                          "border-2",
+                          "rounded-md",
+                          "p-3",
+                          "hover:border-slate-400",
+                          "hover:cursor-pointer",
+                          isChecked && "border-cyan-400"
+                        )}
+                        onChange={submitAnswer}
+                      >
+                        <input
+                          type="radio"
+                          name="answer"
+                          value={answerOption}
+                          defaultChecked={isChecked}
+                          className="mr-2"
+                        />
+                        {answerOption}
+                      </label>
+                    );
+                  }
+                )}
+              </div>
+            )}
+
+          {question.type === QuestionType.freeForm && (
+            <>
+              <Input
+                type="text"
+                key={answer?.updatedAt}
+                name="answer"
+                defaultValue={answer?.answer}
+                disabled={isSubmitting}
+                placeholder="Answer"
+                required
+              />
+              <Button as="button" type="submit" disabled={isSubmitting}>
+                Answer
+              </Button>
+            </>
+          )}
 
           {isSetOrSubmitting(answer, isSubmitting)}
         </answerFetcher.Form>
