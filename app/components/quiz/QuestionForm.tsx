@@ -13,7 +13,7 @@ export default function QuestionForm({
   questions: MinimalQuestion[];
 }) {
   const fetcher = useFetcher();
-  const hasSubmission = !!fetcher.submission;
+  const hasSubmission = !!fetcher.formData;
   const [questionType, setQuestionType] = useState(QuestionType.freeForm);
   const [answerOptions, setAnswerOptions] = useState<string[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
@@ -59,7 +59,6 @@ export default function QuestionForm({
     <fetcher.Form
       method="post"
       style={{ opacity: hasSubmission ? 0.25 : 1 }}
-      replace
       ref={formRef}
       className="flex flex-col gap-2"
     >
