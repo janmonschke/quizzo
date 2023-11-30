@@ -99,6 +99,28 @@ export default function QuizSessionComponent() {
     }
   }, [revalidator, latestPosition, quizSession]);
 
+  const answerUpdate = useEventSource(
+    `/sse/quiz-session/${quizSession.id}/answer/${team.id}`,
+    {
+      event: "answer",
+    }
+  );
+
+  // Need to revalidate when a new answer comes in, otherwise SSE gets out of sync.
+  useEffect(() => {
+    const parsedAnswer = JSON.parse(
+      answerUpdate || '{"id":null,"answer":null}'
+    );
+    // Checking if we already have the answer, to prevent infinite revalidation
+    const hasAnswer =
+      answer &&
+      answer.id === parsedAnswer.id &&
+      answer.answer === parsedAnswer.answer;
+    if (answerUpdate !== null && !hasAnswer && revalidator.state === "idle") {
+      revalidator.revalidate();
+    }
+  }, [revalidator, answerUpdate, answer]);
+
   const submitAnswer = useCallback(
     (event: React.FormEvent<HTMLLabelElement>) => {
       answerFetcher.submit(event.currentTarget.form, {

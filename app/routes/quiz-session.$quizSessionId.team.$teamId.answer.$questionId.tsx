@@ -49,5 +49,10 @@ export const action: ActionFunction = async ({ request, params }) => {
     JSON.stringify({ id: answerResult.id, answer: answerResult.answer })
   );
 
+  emitter.emit(
+    events.updateTeamAnswer(quizSessionId, teamId),
+    JSON.stringify({ id: answerResult.id, answer: answerResult.answer })
+  );
+
   return json({ success: true });
 };
