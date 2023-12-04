@@ -21,7 +21,7 @@ export default function Index() {
       <div className="flex flex-row items-center justify-between gap-2">
         <H1>{quiz.name}</H1>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
           <Button as="link" to={exportPath} reloadDocument kind="ghost">
             Export
           </Button>

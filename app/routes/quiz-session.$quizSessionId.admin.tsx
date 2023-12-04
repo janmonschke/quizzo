@@ -96,7 +96,6 @@ export default function QuizSessionComponent() {
       revalidator.revalidate();
     }
   }, [revalidator, updatedName, quizSession]);
-
   const question = quizSession.quiz.Questions[quizSession.currentPosition];
   const questionsCount = quizSession.quiz.Questions.length - 1;
   const currentPosition = quizSession.currentPosition;
@@ -142,24 +141,26 @@ export default function QuizSessionComponent() {
         <QuestionComponent {...question} />
       </div>
       <table>
-        {quizSession.Teams.map((team) => {
-          const answer = quizSession.Answers.find(
-            (answer) =>
-              answer.teamId === team.id && answer.questionId == question.id
-          );
-          const awardedPoints =
-            answer &&
-            team.AwardedPoints.find((awp) => answer.id === awp.answerId);
-          return (
-            <TeamAnswer
-              key={`${team.id}-${team.name}-${question.id}`}
-              answer={answer}
-              awardedPoints={awardedPoints}
-              team={team}
-              question={question}
-            />
-          );
-        })}
+        <tbody>
+          {quizSession.Teams.map((team) => {
+            const answer = quizSession.Answers.find(
+              (answer) =>
+                answer.teamId === team.id && answer.questionId == question.id
+            );
+            const awardedPoints =
+              answer &&
+              team.AwardedPoints.find((awp) => answer.id === awp.answerId);
+            return (
+              <TeamAnswer
+                key={`${team.id}-${team.name}-${question.id}`}
+                answer={answer}
+                awardedPoints={awardedPoints}
+                team={team}
+                question={question}
+              />
+            );
+          })}
+        </tbody>
       </table>
     </div>
   );

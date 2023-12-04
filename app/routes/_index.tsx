@@ -76,8 +76,6 @@ function LoggedInIndex({
   console.log(host.QuizSessions.length);
   return (
     <>
-      {host.name}
-
       {host.Quizzes.length && (
         <>
           <H2>Quizzes</H2>
