@@ -11,7 +11,11 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
       id: quiz.id,
     },
     include: {
-      Questions: true,
+      Questions: {
+        orderBy: {
+          position: "asc",
+        },
+      },
     },
   });
 
@@ -38,11 +42,8 @@ ${
 
 Answer: ${question.answer}
 
-Points: ${question.points}
-`
-  ).join("\n")}
-  
-  `;
+Points: ${question.points}`
+  ).join("\n")}`;
 
   return new Response(content, {
     status: 200,
