@@ -76,8 +76,8 @@ function LoggedInIndex({
   return (
     <section>
       <section className="md:flex md:justify-between">
-        <section className="my-4">
-          <H2 className="flex justify-between">
+        <section className="mt-4 mb-8">
+          <H2 className="flex justify-between mb-3">
             <span className="inline-block mr-4">Quizzes</span>{" "}
             <Button to="/quiz/new" as="link" size="sm">
               New quiz
@@ -86,7 +86,7 @@ function LoggedInIndex({
           {host.Quizzes.length ? (
             <ul className="my-2">
               {host.Quizzes.map((quiz) => (
-                <li key={quiz.id}>
+                <li key={quiz.id} className="mb-2">
                   <Link to={`/quiz/${quiz.id}`}>{quiz.name}</Link>
                 </li>
               ))}
@@ -96,11 +96,11 @@ function LoggedInIndex({
           )}
         </section>
         <section className="my-4">
-          <H2>Quiz Sessions</H2>
+          <H2 className="mb-3">Quiz Sessions</H2>
           {host.QuizSessions.length ? (
             <ul>
               {host.QuizSessions.map((session) => (
-                <li key={session.id}>
+                <li key={session.id} className="mb-2">
                   <Link to={`/quiz-session/${session.id}/admin`}>
                     {new Date(session.createdAt).toLocaleDateString(
                       preferredLanguage
@@ -119,7 +119,9 @@ function LoggedInIndex({
       </section>
       <footer className="my-4 flex justify-end">
         <details>
-          <summary className="my-2 hover:cursor-pointer">{host.name}</summary>
+          <summary className="my-2 text-right hover:cursor-pointer">
+            {host.name}
+          </summary>
           <Button as="link" to="/logout" size="sm" kind="ghost">
             Logout
           </Button>
