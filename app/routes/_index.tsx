@@ -73,44 +73,58 @@ function LoggedInIndex({
   host: NonNullable<ReturnType<typeof useLoaderData<typeof loader>>["host"]>;
   preferredLanguage: string;
 }) {
-  console.log(host.QuizSessions.length);
   return (
-    <>
-      {host.Quizzes.length && (
-        <>
-          <H2>Quizzes</H2>
-          <Button to="/quiz/new" as="link">
-            Create new quiz
+    <section>
+      <section className="md:flex md:justify-between">
+        <section className="my-4">
+          <H2 className="flex justify-between">
+            Quizzes{" "}
+            <Button to="/quiz/new" as="link">
+              New quiz
+            </Button>
+          </H2>
+          {host.Quizzes.length ? (
+            <ul className="my-2">
+              {host.Quizzes.map((quiz) => (
+                <li key={quiz.id}>
+                  <Link to={`/quiz/${quiz.id}`}>{quiz.name}</Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No quizzes so far. Create one with the button above.</p>
+          )}
+        </section>
+        <section className="my-4">
+          <H2>Quiz Sessions</H2>
+          {host.QuizSessions.length ? (
+            <ul>
+              {host.QuizSessions.map((session) => (
+                <li key={session.id}>
+                  <Link to={`/quiz-session/${session.id}/admin`}>
+                    {new Date(session.createdAt).toLocaleDateString(
+                      preferredLanguage
+                    )}
+                    : {session.quiz.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>
+              No quiz sessions so far. Go to a quiz page to start a new session.
+            </p>
+          )}
+        </section>
+      </section>
+      <footer className="my-4 flex justify-end">
+        <details>
+          <summary className="my-2 hover:cursor-pointer">{host.name}</summary>
+          <Button as="link" to="/logout" size="sm" kind="ghost">
+            Logout
           </Button>
-          <ul className="my-2">
-            {host.Quizzes.map((quiz) => (
-              <li key={quiz.id}>
-                <Link to={`/quiz/${quiz.id}`}>{quiz.name}</Link>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
-
-      <H2>Quiz Sessions</H2>
-      {host.QuizSessions.length ? (
-        <ul>
-          {host.QuizSessions.map((session) => (
-            <li key={session.id}>
-              <Link to={`/quiz-session/${session.id}/admin`}>
-                {new Date(session.createdAt).toLocaleDateString(
-                  preferredLanguage
-                )}
-                : {session.quiz.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>
-          No quiz sessions so far. Go to a quiz page to start a new session.
-        </p>
-      )}
-    </>
+        </details>
+      </footer>
+    </section>
   );
 }

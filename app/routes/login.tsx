@@ -1,25 +1,9 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Form } from "@remix-run/react";
-import { Button } from "~/components/Buttons";
-import { Input } from "~/components/Input";
+import { AuthForm } from "~/components/AuthForm";
 import { authenticator } from "~/services/auth.server";
 
 export default function Login() {
-  return (
-    <>
-      <h1>Login</h1>
-      <Form method="post">
-        <Input type="text" name="name" required autoFocus />
-        <Input
-          type="password"
-          name="password"
-          autoComplete="current-password"
-          required
-        />
-        <Button>Login</Button>
-      </Form>
-    </>
-  );
+  return <AuthForm headline="Login" actionLabel="Login" />;
 }
 
 export async function action({ request }: ActionFunctionArgs) {

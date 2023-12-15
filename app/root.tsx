@@ -33,7 +33,7 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <div className="container mx-auto px-8 md:px-24 xl:px-48 py-4 mb-8">
+        <div className="container mx-auto max-w-4xl px-8 py-4 mb-8">
           <Outlet />
         </div>
         <ScrollRestoration />
