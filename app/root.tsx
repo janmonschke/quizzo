@@ -46,7 +46,7 @@ function Toast({ toast }: { toast?: ToastType }) {
   return (
     <div className="fixed right-10 bottom-10 max-w-xs">
       <div
-        className={`flex justify-center items-center gap-4 p-4 bg-white rounded-lg shadow-lg border-2 ${
+        className={`flex justify-center items-center gap-4 p-4 rounded-lg shadow-lg border-2 ${
           toast.type === "success"
             ? "bg-green-100 border-green-300"
             : "bg-red-100 border-red-300"
