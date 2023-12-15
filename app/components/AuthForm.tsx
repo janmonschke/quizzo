@@ -8,8 +8,8 @@ export const AuthForm: React.FC<{ actionLabel: string; headline: string }> = ({
   headline,
 }) => (
   <section>
-    <H2>{headline}</H2>
-    <div className="md:my-8">
+    <H2 className="text-center">{headline}</H2>
+    <div className="md:mb-8">
       <Form method="post" className="flex flex-col max-w-xs mx-auto">
         <label htmlFor="name" className="my-1">
           Username:

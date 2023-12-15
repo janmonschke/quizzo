@@ -1,9 +1,15 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { AuthForm } from "~/components/AuthForm";
+import { H1 } from "~/components/Headlines";
 import { authenticator } from "~/services/auth.server";
 
 export default function Login() {
-  return <AuthForm headline="Login" actionLabel="Login" />;
+  return (
+    <>
+      <H1 className="text-center">Welcome to Quizzo</H1>
+      <AuthForm headline="Login" actionLabel="Login" />
+    </>
+  );
 }
 
 export async function action({ request }: ActionFunctionArgs) {

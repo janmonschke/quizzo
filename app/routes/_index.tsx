@@ -3,10 +3,11 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { db } from "~/db.server";
 import { authenticator } from "~/services/auth.server";
-import { H1, H2 } from "~/components/Headlines";
+import { H1, H2, H3 } from "~/components/Headlines";
 import { Link } from "~/components/Link";
 import { Button } from "~/components/Buttons";
 import { getPreferredLanguage } from "~/helpers/language.server";
+import quiz from "~/images/quiz.png";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const host = await authenticator.isAuthenticated(request);
@@ -43,7 +44,7 @@ export default function Index() {
 
   return (
     <div>
-      <H1>Welcome to Quizzo</H1>
+      <H1 className="text-center">Welcome to Quizzo</H1>
 
       {!host ? (
         <AnonymousIndex />
@@ -56,14 +57,34 @@ export default function Index() {
 
 function AnonymousIndex() {
   return (
-    <ul>
-      <li>
-        <Link to="/login">Login</Link>
-      </li>
-      <li>
-        <Link to="/register">Register</Link>
-      </li>
-    </ul>
+    <>
+      <H2 className="text-center">
+        Quizzo is a tool to manage (remote-) quizzes!
+      </H2>
+
+      <section className="md:w-3/4 mx-auto flex flex-col items-center">
+        <img src={quiz} className="p-8 rounded-lg shadow-2xl mt-4 mb-8" />
+
+        <ul className="list-disc ml-6 w-1/2">
+          <li>Lets you create quizzes up front</li>
+          <li>Supports multiple types of questions</li>
+          <li>Adds up points automatically</li>
+          <li>Lets quiz teams submit answers in real time (optional)</li>
+        </ul>
+      </section>
+      <ul className="flex gap-4 m-8 justify-center">
+        <li>
+          <Button as="link" to="/login">
+            Login
+          </Button>
+        </li>
+        <li>
+          <Button as="link" to="/register">
+            Register
+          </Button>
+        </li>
+      </ul>
+    </>
   );
 }
 function LoggedInIndex({
