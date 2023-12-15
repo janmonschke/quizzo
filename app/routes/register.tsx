@@ -8,6 +8,7 @@ import { H1 } from "~/components/Headlines";
 import { db } from "~/db.server";
 import { generatePasswordHash } from "~/helpers/password.server";
 import { authenticator } from "~/services/auth.server";
+import { putToast } from "~/services/toast.server";
 
 export default function Register() {
   return (
@@ -24,7 +25,11 @@ export async function action({ request }: ActionFunctionArgs) {
   const password = formData.get("password")?.toString();
 
   if (!name || !password) {
-    throw redirect("/register");
+    const headers = await putToast({
+      type: "error",
+      message: "You need to provide a user name and a password",
+    });
+    throw redirect("/register", { headers });
   }
 
   const passwordHash = await generatePasswordHash(password);
@@ -34,7 +39,11 @@ export async function action({ request }: ActionFunctionArgs) {
       passwordHash,
     },
   });
-  return redirect("/login");
+  const headers = await putToast({
+    type: "success",
+    message: "Your account was registered. You can sign in now.",
+  });
+  return redirect("/login", { headers });
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {

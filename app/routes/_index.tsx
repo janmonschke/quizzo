@@ -3,7 +3,7 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { db } from "~/db.server";
 import { authenticator } from "~/services/auth.server";
-import { H1, H2, H3 } from "~/components/Headlines";
+import { H1, H2 } from "~/components/Headlines";
 import { Link } from "~/components/Link";
 import { Button } from "~/components/Buttons";
 import { getPreferredLanguage } from "~/helpers/language.server";
