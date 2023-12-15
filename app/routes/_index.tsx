@@ -75,7 +75,7 @@ function LoggedInIndex({
 }) {
   return (
     <section>
-      <section className="md:flex md:justify-between">
+      <section className="md:flex md:justify-between gap-8">
         <section className="mt-4 mb-8">
           <H2 className="flex justify-between mb-3">
             <span className="inline-block mr-4">Quizzes</span>{" "}
@@ -117,7 +117,7 @@ function LoggedInIndex({
           )}
         </section>
       </section>
-      <footer className="my-4 flex justify-end">
+      <footer className="mt-8 mb-4 flex justify-end">
         <details>
           <summary className="my-2 text-right hover:cursor-pointer">
             {host.name}
