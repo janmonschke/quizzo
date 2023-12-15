@@ -63,7 +63,11 @@ function AnonymousIndex() {
       </H2>
 
       <section className="md:w-3/4 mx-auto flex flex-col items-center">
-        <img src={quiz} className="p-8 rounded-lg shadow-2xl mt-4 mb-8" />
+        <img
+          src={quiz}
+          className="p-8 rounded-lg shadow-2xl mt-4 mb-8"
+          alt=""
+        />
 
         <ul className="list-disc ml-6 w-1/2">
           <li>Lets you create quizzes up front</li>
