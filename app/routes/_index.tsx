@@ -78,8 +78,8 @@ function LoggedInIndex({
       <section className="md:flex md:justify-between">
         <section className="my-4">
           <H2 className="flex justify-between">
-            Quizzes{" "}
-            <Button to="/quiz/new" as="link">
+            <span className="inline-block mr-4">Quizzes</span>{" "}
+            <Button to="/quiz/new" as="link" size="sm">
               New quiz
             </Button>
           </H2>
