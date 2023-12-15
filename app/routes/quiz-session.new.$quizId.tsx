@@ -1,9 +1,9 @@
 import type { ActionFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { redirect, json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "~/components/Buttons";
-import { H1 } from "~/components/Headlines";
+import { H1, H3 } from "~/components/Headlines";
 import { Input } from "~/components/Input";
 import { TextArea } from "~/components/Textarea";
 import { db } from "~/db.server";
@@ -34,9 +34,11 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
 
   const body = await request.formData();
-  const players = splitTextIntoRows(body.get("players")?.toString() ?? "");
-  const teamCountR = body.get("teamCount")?.toString();
-  const teamCount = parseInt(teamCountR || "0");
+  const teams = body.getAll("team");
+
+  if (!teams || teams.length < 2) {
+    throw new Response("Invalid request", { status: 400 });
+  }
 
   const session = await db.quizSession.create({
     data: {
@@ -45,30 +47,41 @@ export const action: ActionFunction = async ({ request, params }) => {
     },
   });
 
-  if (players && teamCount > 0) {
-    const teams = distributeTeams({ players, teamCount });
-    await Promise.all(
-      teams.map((team) =>
-        db.team.create({
-          data: {
-            name: team.name,
-            members: serializeArrayString(team.players),
-            quizSessionId: session.id,
-          },
-        })
-      )
-    );
-  }
+  const teamsWithPlayers = teams.map((teamName) => {
+    const players = body.getAll(`${teamName}-player`).map(String);
+    return { name: teamName.toString(), players };
+  });
+
+  await Promise.all(
+    teamsWithPlayers.map((team) =>
+      db.team.create({
+        data: {
+          name: team.name,
+          members: serializeArrayString(team.players),
+          quizSessionId: session.id,
+        },
+      })
+    )
+  );
 
   return redirect(`/quiz-session/${session.id}/admin`);
 };
 
+const minTeamCount = 2;
+
 export default function Index() {
   const { quizId } = useLoaderData<typeof loader>();
-  const [teamValue, setTeamValue] = useState("");
+  const [teamCount, setTeamCount] = useState(minTeamCount);
+  const [playerNames, setPlayerNames] = useState("John\nEmma\nTim\nSusan");
 
-  const players = splitTextIntoRows(teamValue);
+  const players = useMemo(() => {
+    return splitTextIntoRows(playerNames);
+  }, [playerNames]);
   const playerCount = players.length;
+
+  const teams = useMemo(() => {
+    return distributeTeams({ players, teamCount });
+  }, [players, teamCount]);
 
   return (
     <div>
@@ -80,8 +93,8 @@ export default function Index() {
           <TextArea
             className="block"
             name="players"
-            value={teamValue}
-            onChange={(e) => setTeamValue(e.target.value)}
+            value={playerNames}
+            onChange={(e) => setPlayerNames(e.target.value)}
             placeholder="Add one player per row"
           />
         </label>
@@ -89,15 +102,39 @@ export default function Index() {
           <div>Amount of teams:</div>
           <Input
             type="number"
-            min="2"
+            min={minTeamCount}
             max="10"
             step="1"
             pattern="\d+"
             name="teamCount"
-            defaultValue={2}
+            value={teamCount}
+            onChange={(event) => setTeamCount(parseInt(event.target.value))}
             required
           />
         </label>
+        <div>
+          <h2>Teams:</h2>
+          <div className="flex gap-4">
+            {teams.map((team) => (
+              <div key={team.name}>
+                <H3>{team.name}</H3>
+                <input type="hidden" name="team" value={team.name} />
+                <ul>
+                  {team.players.map((player) => (
+                    <li key={player}>
+                      {player}{" "}
+                      <input
+                        type="hidden"
+                        name={`${team.name}-player`}
+                        value={player}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
         <div>
           <Button type="submit">Create Session</Button>
         </div>
