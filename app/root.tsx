@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { cssBundleHref } from "@remix-run/css-bundle";
 import {
   json,
@@ -16,6 +17,7 @@ import {
   useLoaderData,
   useLocation,
 } from "@remix-run/react";
+import cx from "classnames";
 import styles from "./tailwind.css";
 import { popToast } from "./services/toast.server";
 import type { Toast as ToastType } from "./services/toast.server";
@@ -40,17 +42,43 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 function Toast({ toast }: { toast?: ToastType }) {
   const location = useLocation();
+  const [isInDOM, setIsInDOM] = useState(false);
+  useEffect(() => {
+    if (toast) {
+      requestAnimationFrame(() => setIsInDOM(true));
+    }
+  }, [toast]);
+
   if (!toast) {
     return null;
   }
   return (
-    <div className="fixed right-10 bottom-10 max-w-xs">
+    <div
+      className={cx(
+        "fixed",
+        "right-10",
+        "bottom-0",
+        "max-w-xs",
+        "opacity-0",
+        "transition-all",
+        "duration-150",
+        isInDOM && "bottom-10",
+        isInDOM && "opacity-100"
+      )}
+    >
       <div
-        className={`flex justify-center items-center gap-4 p-4 rounded-lg shadow-lg border-2 ${
-          toast.type === "success"
-            ? "bg-green-100 border-green-300"
-            : "bg-red-100 border-red-300"
-        }`}
+        className={cx(
+          "flex",
+          "justify-center",
+          "items-center",
+          "gap-4",
+          "p-4",
+          "rounded-lg",
+          "shadow-lg",
+          "border-2",
+          toast.type === "success" && "bg-green-100 border-green-300",
+          toast.type === "error" && "bg-red-100 border-red-300"
+        )}
       >
         {toast.message}
         <Form method="get" action={location.pathname}>
