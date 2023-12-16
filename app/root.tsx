@@ -65,6 +65,8 @@ function Toast({ toast }: { toast?: ToastType }) {
         isInDOM && "bottom-10",
         isInDOM && "opacity-100"
       )}
+      role="alert"
+      aria-labelledby="toast-label"
     >
       <div
         className={cx(
@@ -80,7 +82,7 @@ function Toast({ toast }: { toast?: ToastType }) {
           toast.type === "error" && "bg-red-100 border-red-300"
         )}
       >
-        {toast.message}
+        <span id="toast-label">{toast.message}</span>
         <Form method="get" action={location.pathname}>
           <button
             type="submit"
