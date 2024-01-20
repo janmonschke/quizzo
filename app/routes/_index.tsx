@@ -65,7 +65,7 @@ function AnonymousIndex() {
       <section className="md:w-3/4 mx-auto flex flex-col items-center">
         <img
           src={quiz}
-          className="p-8 rounded-lg shadow-2xl mt-4 mb-8"
+          className="p-8 rounded-lg shadow-2xl mt-4 mb-8 h-auto"
           style={{
             aspectRatio: "1708/1114",
           }}
